@@ -31,7 +31,6 @@ com.payment/
 ### Prasyarat
 
 - Java 11 atau lebih tinggi
-- Maven 3.6 atau lebih tinggi
 
 ### Step 1: Clone/Download Project
 
@@ -39,28 +38,30 @@ com.payment/
 cd /run/media/jariz/SATA/coding/udinus/sistem-pembayaran-digital
 ```
 
-### Step 2: Compile dan Run dengan Maven
+### Step 2: Menjalankan Program
+
+Tidak butuh compiler seperti Maven. Mulai Java 11+, Anda bisa jalankan file `Main.java` secara langsung. 
+Ketikkan ini di Terminal/CMD:
 
 ```bash
-# Compile project
-mvn clean compile
-
-# Run aplikasi
-mvn exec:java -Dexec.mainClass="com.payment.Main"
+java src/main/java/com/payment/Main.java
 ```
 
-### Step 3: Package JAR (Optional)
-
+**Bisa juga memakai Script Bawaan:**
 ```bash
-mvn clean package
-java -jar target/sistem-pembayaran-digital-1.0.0-jar-with-dependencies.jar
+# Untuk Linux / Mac OS
+chmod +x quick.sh
+./quick.sh
+
+# Untuk Windows
+quickrun.bat
 ```
 
 ### Alternative: Run dari IDE
 
-1. Buka project di IntelliJ IDEA atau Eclipse
-2. Right-click pada `Main.java`
-3. Klik **Run 'Main()'**
+1. Buka project di VS Code, IntelliJ IDEA atau Eclipse
+2. Buka dan Right-click pada `src/main/java/com/payment/Main.java`
+3. Klik **Run 'Main()' / Run Java**
 
 ## 📝 Cara Menggunakan
 

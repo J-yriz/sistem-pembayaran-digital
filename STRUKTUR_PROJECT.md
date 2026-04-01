@@ -79,24 +79,28 @@ Class utama yang:
 
 ## 🚀 Cara Menjalankan
 
-### Menggunakan Maven:
+### Menjalankan Langsung (Java 11+)
+
+Anda tidak memerlukan build system (seperti Gradle / Maven). Java 11 mendukung eksekusi file tanpa `javac` manual:
 
 ```bash
-# Compile
-mvn compile
-
-# Run
-mvn exec:java -Dexec.mainClass="com.payment.Main"
-
-# Package JAR
-mvn clean package
-java -jar target/sistem-pembayaran-digital-1.0.0-jar-with-dependencies.jar
+java src/main/java/com/payment/Main.java
 ```
 
-### Menggunakan IDE (IntelliJ/Eclipse):
+### Menggunakan Script Cepat:
 
-1. Import project
-2. Right-click pada Main.java
+```bash
+# Di OS Linux / Mac
+./quick.sh
+
+# Di OS Windows
+quickrun.bat
+```
+
+### Menggunakan IDE (IntelliJ/Eclipse/VS Code):
+
+1. Open folder project
+2. Right-click pada file `/src/main/java/com/payment/Main.java`
 3. Klik "Run Main()"
 
 ## 💡 Konsep Java yang Digunakan
