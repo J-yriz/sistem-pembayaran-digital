@@ -114,6 +114,12 @@ public class Main {
         String name = InputHandler.readString("Masukkan Nama: ");
         String email = InputHandler.readString("Masukkan Email: ");
         double balance = InputHandler.readDouble("Masukkan Saldo Awal (Rp): ");
+        String confirm = InputHandler.readString("Apakah data sudah benar? (Y/N): ");
+
+        if (!confirm.equalsIgnoreCase("Y")) {
+            DisplayUtils.displayError("Penambahan user dibatalkan.");
+            return;
+        }
 
         User newUser = new User(id, name, email, balance);
         userService.addUser(newUser);
@@ -151,7 +157,12 @@ public class Main {
         String toUserId = InputHandler.readString("Masukkan ID Penerima: ");
         double amount = InputHandler.readDouble("Masukkan Jumlah Transfer (Rp): ");
         String description = InputHandler.readString("Masukkan Deskripsi (opsional): ");
-
+        String confirm = InputHandler.readString("Apakah data sudah benar? (Y/N): ");
+        if (!confirm.equalsIgnoreCase("Y")) {
+            DisplayUtils.displayError("Transfer dibatalkan.");
+            return;
+        }
+        
         transactionService.transfer(fromUserId, toUserId, amount, description);
     }
 
