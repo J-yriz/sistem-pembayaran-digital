@@ -23,6 +23,7 @@ import java.util.Scanner;
 public class Main {
     // Italic + Light Gray foreground
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
+    private static final String ITALIC_DARK_GRAY = "\u001B[3;38;5;59m";
 
     // Bold + White foreground
     private static final String BOLD_WHITE = "\u001B[1;38;5;15m";
@@ -37,6 +38,7 @@ public class Main {
     static User currentUser = null;
 
     public static void main(String[] args) {
+        DisplayUtils.ASCIIArt(args);
         DisplayUtils.displayHeader();
         initializeUsers();
         showInitialBalance();
@@ -51,7 +53,11 @@ public class Main {
                     break;
                 case 2:
                     if (currentUser != null) {
+                        System.out.println("╔═══════════════════════════════════════════════════════════════╗");
                         currentUser.showBalance();
+                        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                     }
@@ -59,30 +65,54 @@ public class Main {
                 case 3:
                     if (currentUser != null) {
                         performTopUp();
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
                 case 4:
                     if (currentUser != null) {
                         performPayment();
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
                 case 5:
                     if (currentUser != null) {
                         currentUser.showTransactionHistory();
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
                 case 6:
                     if (currentUser != null) {
                         System.out.println("👋 " + currentUser.getName() + " logout. Sampai jumpa!");
                         currentUser = null;
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("ℹ️  Anda belum login.");
+                        
+                        System.out.println("Command executed, please wait for awhile...");
+                        System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
                 case 0:
@@ -137,7 +167,8 @@ public class Main {
         System.out.printf("║ %-28s ║ %-30s ║%n", "3. Top Up", "6. Logout");
         System.out.printf("║ %-28s ║ %-30s ║%n", "0. Exit", "");
         System.out.println("╚══════════════════════════════╩════════════════════════════════╝");
-        return readIntInRange("Pilih menu: ", 0, 6);
+        System.out.print("\n \n");
+        return readIntInRange( "\u21A3 Pilih menu: ", 0, 6);
     }
 
     /**
@@ -145,8 +176,8 @@ public class Main {
      */
     static int readIntInRange(String prompt, int min, int max) {
         while (true) {
-            System.out.print(prompt);
-
+            System.out.print(BOLD_WHITE + prompt + RESET);
+            
             try {
                 int value = scanner.nextInt();
                 if (value < min || value > max) {
@@ -158,6 +189,8 @@ public class Main {
                 System.out.println("✗ Input harus berupa angka.");
                 scanner.nextLine();
             }
+            // System.out.println("Input executed, please wait for awhile...");
+            // System.out.println("─────────────────────────────────────────────────────────────────");
         }
     }
 
@@ -165,40 +198,89 @@ public class Main {
      * Login sebagai salah satu user yang tersedia.
      */
     static void loginUser() {
-        System.out.println("\n=== LOGIN ===");
-        System.out.println("Pilih user:");
+        System.out.println("Input executed, please wait for awhile...");
+        System.out.print("───────────────────────────────────────────────────────────────── \n \n");
+        System.out.println("╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");           
+        System.out.println(BOLD_WHITE + "║ * PILIH AKUN                                                  ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Silahkan pilih akun untuk melanjutkan aktifitas             ║" + RESET);
+        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
+        System.out.println("║                                                               ║");
 
         for (int i = 0; i < users.length; i++) {
-            System.out.println(
-                (i + 1)
-                    + ". "
-                    + users[i].getName()
-                    + " ("
-                    + users[i].getUserId()
-                    + ") - "
-                    + users[i].getAccountType()
-                    + " | Limit Rp"
-                    + String.format("%,.0f", users[i].getTransactionLimit())
-                    + " | Cashback "
-                    + String.format("%.0f%%", users[i].getCashbackRate() * 100)
-            );
-        }
+            // 1. Extract variables
+            String name = users[i].getName();
+            String id = users[i].getUserId();
+            String type = users[i].getAccountType();
+            double limit = users[i].getTransactionLimit();
+            double cbRate = users[i].getCashbackRate() * 100;
 
-        int choice = readIntInRange("Pilih nomor: ", 1, users.length);
+            // 2. Setup VISIBLE text for Row 1 (Name left, ID/Type right)
+            String leftText1 = (i + 1) + ". " + name;
+            String rightText1 = "(" + id + ") - " + type;
+            
+            // Calculate spaces for Row 1
+            int spaces1 = 61 - leftText1.length() - rightText1.length();
+            if (spaces1 < 1) spaces1 = 1;
+
+            // 3. Setup VISIBLE text for Row 2 (Limit & Cashback right)
+            String rightText2 = String.format("Limit: Rp %,.0f | CB: %.0f%%", limit, cbRate);
+            
+            // Calculate spaces for Row 2 (since the left side is empty, we just subtract the right text)
+            int spaces2 = 61 - rightText2.length();
+            if (spaces2 < 1) spaces2 = 1;
+
+            // 4. Print Row 1
+            System.out.println(
+                "║ " 
+                + (i + 1) + ". " + BOLD_WHITE + name + RESET 
+                + " ".repeat(spaces1) 
+                + ITALIC_DARK_GRAY + rightText1 + RESET 
+                + " ║"
+            );
+
+            // 5. Print Row 2
+            System.out.println(
+                "║ " 
+                + " ".repeat(spaces2) 
+                + rightText2 
+                + " ║"
+            );
+
+            if ( i !=  users.length - 1) {
+                System.out.println("║───────────────────────────────────────────────────────────────║");
+            }
+
+            // Optional: Add a blank line between users so it doesn't look too cluttered
+            if (i < users.length - 1) {
+                System.out.println("║" + " ".repeat(63) + "║"); 
+            }
+        }
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+
+        int choice = readIntInRange("\n\u21A3 Pilih nomor: ", 1, users.length);
         currentUser = users[choice - 1];
-        System.out.println("✓ Login sebagai " + currentUser.getName() + " berhasil!");
+        
+        System.out.println("✓ Login sebagai " + BOLD_WHITE + currentUser.getName() + RESET + " berhasil!");
+        System.out.println("─────────────────────────────────────────────────────────────────");
     }
 
     /**
      * Proses top up saldo user aktif.
      */
     static void performTopUp() {
-        System.out.println("\n=== TOP UP ===");
-        System.out.println("User: " + currentUser.getName());
-
+        System.out.println("╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");         
+        System.out.println(BOLD_WHITE + "║ * TOP UP SALDO                                                ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Silahkan ketik nominal yang anda inginkan                   ║" + RESET);
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
         double amount = readPositiveAmount("Masukkan nominal top-up: Rp ");
         currentUser.topUp(amount);
+        System.out.println("╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");
         currentUser.showBalance();
+        System.out.println("║                                                               ║");
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
     }
 
     /**
@@ -221,7 +303,11 @@ public class Main {
         }
 
         processPayment(payment);
+        System.out.println("╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");
         currentUser.showBalance();
+        System.out.println("║                                                               ║");
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
     }
 
     /**
@@ -300,6 +386,7 @@ public class Main {
      */
     static double readPositiveAmount(String prompt) {
         while (true) {
+            
             System.out.print(prompt);
 
             try {

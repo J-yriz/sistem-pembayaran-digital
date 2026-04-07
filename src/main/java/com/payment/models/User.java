@@ -202,6 +202,7 @@ public class User {
      * Format: Saldo Ahmad (U001): Rp 500000
      */
     public void showBalance() {
+        
         System.out.printf("║ User: %-20s Saldo: Rp %,24.0f ║%n", name, balance);
     }
 

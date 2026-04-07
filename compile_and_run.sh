@@ -18,7 +18,7 @@ if [ $? -eq 0 ]; then
     echo ""
     
     # 3. Jalankan program dengan classpath (-cp) ke folder bin
-    java -cp bin com.payment.Main
+    java -Dfile.encoding=UTF-8 -cp bin com.payment.Main
 else
     echo "❌ Compile Gagal! Silakan cek error di atas."
     exit 1
