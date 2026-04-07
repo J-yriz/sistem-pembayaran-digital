@@ -106,7 +106,14 @@ public class Transaction {
         String formattedTime = timestamp.format(formatter);
         
         // Menentukan simbol/ikon berdasarkan tipe transaksi
-        String icon = type.equals("TOP_UP") ? "↑ TOPUP" : "↓ BAYAR";
+        String icon;
+        if ("TOP_UP".equals(type)) {
+            icon = "↑ TOPUP";
+        } else if ("RECEIVE".equals(type)) {
+            icon = "↓ TERIMA";
+        } else {
+            icon = "↓ BAYAR";
+        }
         
         // Menentukan warna status (untuk terminal output yang lebih bagus)
         String statusDisplay = status.equals("SUCCESS") ? "✓ SUCCESS" : "✗ FAILED";
