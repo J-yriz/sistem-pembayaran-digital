@@ -32,13 +32,10 @@ public class User {
      * Constructor untuk membuat object User baru
      */
     public User(String userId, String name, String phone, double balance) {
-        this.userId = userId;
-        this.name = name;
-        this.phone = phone;
-
-        // Saldo awal tidak boleh negatif.
-        this.balance = balance >= 0 ? balance : 0;
-
+        setUserId(userId);
+        setName(name);
+        setPhone(phone);
+        setBalance(balance);
         this.transactionHistory = new ArrayList<>();
     }
 
@@ -77,12 +74,53 @@ public class User {
         return transactionHistory;
     }
 
+    /**
+     * Mengubah ID user dengan validasi sederhana.
+     */
+    public void setUserId(String userId) {
+        if (userId == null || userId.isBlank()) {
+            System.out.println("✗ User ID tidak boleh kosong.");
+            return;
+        }
+        this.userId = userId;
+    }
+
     public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            System.out.println("✗ Nama tidak boleh kosong.");
+            return;
+        }
         this.name = name;
     }
 
     public void setPhone(String phone) {
+        if (phone == null || phone.isBlank()) {
+            System.out.println("✗ Nomor telepon tidak boleh kosong.");
+            return;
+        }
         this.phone = phone;
+    }
+
+    /**
+     * Mengubah saldo dengan validasi agar tidak negatif.
+     */
+    public void setBalance(double balance) {
+        if (balance < 0) {
+            System.out.println("✗ Saldo tidak boleh negatif.");
+            return;
+        }
+        this.balance = balance;
+    }
+
+    /**
+     * Mengganti riwayat transaksi user (misalnya saat load data).
+     */
+    public void setTransactionHistory(List<Transaction> transactionHistory) {
+        if (transactionHistory == null) {
+            this.transactionHistory = new ArrayList<>();
+            return;
+        }
+        this.transactionHistory = new ArrayList<>(transactionHistory);
     }
 
     /**
