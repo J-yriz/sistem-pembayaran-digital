@@ -287,8 +287,17 @@ public class Main {
      * Proses pembayaran / transfer menggunakan subclass Payment.
      */
     static void performPayment() {
-        System.out.println("\n=== BAYAR / TRANSFER ===");
-        System.out.println("Pengirim: " + currentUser.getName() + " (" + currentUser.getAccountType() + ")");
+
+        // String.format("Limit: Rp %,.0f | CB: %.0f%%", limit, cbRate)
+        String senderInfo = "Pengirim: " + currentUser.getName() + " (" + currentUser.getAccountType() + ")";
+        String name = "║ " + String.format("%-61s", senderInfo) + " ║";
+        System.out.println("╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");         
+        System.out.println(BOLD_WHITE + "║ * BAYAR / TRANSFER                                            ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Silahkan lengkapi form dibawah ini                          ║" + RESET);
+        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
+        System.out.println(name);
+        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
 
         User receiver = chooseReceiverUser();
         if (receiver == null) {
@@ -326,7 +335,8 @@ public class Main {
      * Memilih user penerima transaksi dari list user selain akun yang sedang login.
      */
     static User chooseReceiverUser() {
-        System.out.println("Pilih penerima:");
+        System.out.println("║ Pilih penerima:                                               ║");
+        
         int optionNumber = 1;
         User[] receiverOptions = new User[users.length - 1];
 
@@ -336,9 +346,15 @@ public class Main {
             }
 
             receiverOptions[optionNumber - 1] = user;
-            System.out.println(optionNumber + ". " + user.getName() + " (" + user.getAccountType() + ")");
+            String visibleText = optionNumber + ". " + user.getName() + " (" + user.getAccountType() + ")";
+            int spaces = 61 - visibleText.length();
+            if (spaces < 1) spaces = 1;
+            String receiverInfo = optionNumber + ". " + BOLD_WHITE + user.getName() + RESET + " (" + user.getAccountType() + ")";
+            System.out.println("║ " + receiverInfo + " ".repeat(spaces) + " ║");
             optionNumber++;
         }
+
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
 
         int selectedIndex = readIntInRange("Pilih nomor penerima: ", 1, receiverOptions.length);
         return receiverOptions[selectedIndex - 1];
