@@ -25,6 +25,11 @@ public class WalletTransfer extends Payment {
     }
 
     @Override
+    public double calculateFee() {
+        return 0.0;
+    }
+
+    @Override
     public String getPaymentMethod() {
         return "Wallet Transfer";
     }

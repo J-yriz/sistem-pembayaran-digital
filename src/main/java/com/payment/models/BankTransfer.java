@@ -39,6 +39,11 @@ public class BankTransfer extends Payment {
     }
 
     @Override
+    public double calculateFee() {
+        return 2_500;
+    }
+
+    @Override
     public String getPaymentMethod() {
         return "Bank Transfer";
     }

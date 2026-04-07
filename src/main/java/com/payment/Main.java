@@ -220,8 +220,20 @@ public class Main {
             return;
         }
 
-        payment.execute();
+        processPayment(payment);
         currentUser.showBalance();
+    }
+
+    /**
+     * Memproses pembayaran menggunakan reference parent Payment (polymorphism).
+     */
+    static void processPayment(Payment payment) {
+        if (payment == null) {
+            System.out.println("✗ Pembayaran tidak dapat diproses.");
+            return;
+        }
+
+        payment.execute();
     }
 
     /**

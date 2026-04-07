@@ -53,20 +53,23 @@ public class Payment {
             return;
         }
 
+        double fee = calculateFee();
+        double totalDebit = amount + fee;
+
         if (amount > sender.getTransactionLimit()) {
             setStatus("FAILED");
             System.out.println("✗ Nominal melebihi limit transaksi akun " + sender.getAccountType() + ".");
             return;
         }
 
-        if (!sender.hasSufficientBalance(amount)) {
+        if (!sender.hasSufficientBalance(totalDebit)) {
             setStatus("FAILED");
             // Reuse validasi existing pada User agar history FAILED tetap tercatat.
-            sender.pay(amount);
+            sender.pay(totalDebit);
             return;
         }
 
-        sender.pay(amount);
+        sender.pay(totalDebit);
 
         if (receiver instanceof MerchantUser) {
             ((MerchantUser) receiver).receivePayment(amount);
@@ -91,6 +94,13 @@ public class Payment {
     }
 
     /**
+     * Biaya transaksi default pada parent Payment.
+     */
+    public double calculateFee() {
+        return 0.0;
+    }
+
+    /**
      * Nama metode pembayaran default.
      */
     public String getPaymentMethod() {
@@ -101,12 +111,17 @@ public class Payment {
      * Mencetak ringkasan transaksi setelah berhasil.
      */
     public void printReceipt() {
+        double fee = calculateFee();
+        double totalDebit = amount + fee;
+
         System.out.println("\n=== RECEIPT PEMBAYARAN ===");
         System.out.println("Payment ID : " + paymentId);
         System.out.println("Method     : " + getPaymentMethod());
         System.out.println("Sender     : " + sender.getName());
         System.out.println("Receiver   : " + receiver.getName());
         System.out.println("Amount     : Rp" + String.format("%,.0f", amount));
+        System.out.println("Fee        : Rp" + String.format("%,.0f", fee));
+        System.out.println("Total Debit: Rp" + String.format("%,.0f", totalDebit));
         System.out.println("Status     : " + status);
     }
 }

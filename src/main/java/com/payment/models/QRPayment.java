@@ -25,6 +25,14 @@ public class QRPayment extends Payment {
     }
 
     @Override
+    public double calculateFee() {
+        if (getAmount() < 100_000) {
+            return 0.0;
+        }
+        return getAmount() * 0.007;
+    }
+
+    @Override
     public String getPaymentMethod() {
         return "QR Payment";
     }
