@@ -297,14 +297,14 @@ public class Main {
         System.out.println(ITALIC_LIGHT_GRAY + "║   Silahkan lengkapi form dibawah ini                          ║" + RESET);
         System.out.println("╠═══════════════════════════════════════════════════════════════╣");
         System.out.println(name);
-        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
 
         User receiver = chooseReceiverUser();
         if (receiver == null) {
             return;
         }
 
-        double amount = readPositiveAmount("Masukkan nominal pembayaran: Rp ");
+        double amount = readPositiveAmount(BOLD_WHITE + "\u21B3 Masukkan nominal pembayaran: " + RESET + "Rp"   );
         Payment payment = createPayment(amount, receiver);
 
         if (payment == null) {
@@ -335,7 +335,7 @@ public class Main {
      * Memilih user penerima transaksi dari list user selain akun yang sedang login.
      */
     static User chooseReceiverUser() {
-        System.out.println("║ Pilih penerima:                                               ║");
+        System.out.println(BOLD_WHITE + "\u21B3 Pilih penerima:" + RESET);
         
         int optionNumber = 1;
         User[] receiverOptions = new User[users.length - 1];
@@ -349,14 +349,14 @@ public class Main {
             String visibleText = optionNumber + ". " + user.getName() + " (" + user.getAccountType() + ")";
             int spaces = 61 - visibleText.length();
             if (spaces < 1) spaces = 1;
-            String receiverInfo = optionNumber + ". " + BOLD_WHITE + user.getName() + RESET + " (" + user.getAccountType() + ")";
-            System.out.println("║ " + receiverInfo + " ".repeat(spaces) + " ║");
+            String receiverInfo = "  " + optionNumber + ". " + BOLD_WHITE + user.getName() + RESET + " (" + user.getAccountType() + ")";
+            System.out.println(receiverInfo + " ".repeat(spaces));
             optionNumber++;
         }
 
-        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+        // System.out.println("╚═══════════════════════════════════════════════════════════════╝");
 
-        int selectedIndex = readIntInRange("Pilih nomor penerima: ", 1, receiverOptions.length);
+        int selectedIndex = readIntInRange(BOLD_WHITE + "\u21B3 Pilih nomor penerima: " + RESET, 1, receiverOptions.length);
         return receiverOptions[selectedIndex - 1];
     }
 
@@ -364,12 +364,12 @@ public class Main {
      * Membuat object Payment berdasarkan metode yang dipilih user.
      */
     static Payment createPayment(double amount, User receiver) {
-        System.out.println("Pilih metode pembayaran:");
-        System.out.println("1. Bank Transfer");
-        System.out.println("2. QR Payment");
-        System.out.println("3. Wallet Transfer");
+        System.out.println(BOLD_WHITE + "\u21B3 Pilih metode pembayaran:" + RESET);
+        System.out.println("  1. Bank Transfer");
+        System.out.println("  2. QR Payment");
+        System.out.println("  3. Wallet Transfer");
 
-        int paymentChoice = readIntInRange("Pilih metode: ", 1, 3);
+        int paymentChoice = readIntInRange(BOLD_WHITE + "\u21B3 Pilih metode: " + RESET, 1, 3);
         String paymentId = "P" + System.currentTimeMillis();
 
         // Konsumsi sisa newline dari input angka sebelum membaca string.
@@ -377,19 +377,21 @@ public class Main {
 
         switch (paymentChoice) {
             case 1:
-                System.out.print("Masukkan nama bank: ");
+                System.out.print(BOLD_WHITE + "\u21B3 Masukkan nama bank: " + RESET);
                 String bankName = scanner.nextLine();
-                System.out.print("Masukkan nomor rekening tujuan: ");
+                System.out.print(BOLD_WHITE + "\u21B3 Masukkan nomor rekening tujuan: " + RESET);
                 String destinationAccount = scanner.nextLine();
                 return new BankTransfer(paymentId, amount, currentUser, receiver, bankName, destinationAccount);
 
             case 2:
-                System.out.print("Masukkan kode QR (contoh: QR-STORE01): ");
+                System.out.print(BOLD_WHITE + "\u21B3 Masukkan kode QR (contoh: QR-STORE01): " + RESET);
                 String qrCode = scanner.nextLine();
                 return new QRPayment(paymentId, amount, currentUser, receiver, qrCode);
 
             case 3:
-                return new WalletTransfer(paymentId, amount, currentUser, receiver, receiver.getPhone());
+                System.out.print(BOLD_WHITE + "\u21B3 Masukkan nomor telepon wallet: " + RESET);
+                String walletPhone = scanner.nextLine();
+                return new WalletTransfer(paymentId, amount, currentUser, receiver, walletPhone);
 
             default:
                 System.out.println("✗ Metode pembayaran tidak valid.");

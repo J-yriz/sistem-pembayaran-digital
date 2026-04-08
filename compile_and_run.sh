@@ -3,6 +3,7 @@
 # ==========================================
 # SCRIPT COMPILE & RUN JAVA CLASSIC
 # ==========================================
+chcp.com 65001 > /dev/null 2>&1
 
 # 1. Buat folder 'bin' untuk menampung file .class (jika belum ada)
 mkdir -p bin

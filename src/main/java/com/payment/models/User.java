@@ -12,6 +12,10 @@ import java.util.List;
  * Semua akses ke atribut dilakukan via getter/setter dan method khusus.
  */
 public class User {
+    private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
+    private static final String ITALIC_DARK_GRAY  = "\u001B[3;38;5;59m";
+    private static final String BOLD_WHITE        = "\u001B[1;38;5;15m";
+    private static final String RESET             = "\u001B[0m";
     
     // Menyimpan ID unik user (contoh: U001, U002)
     private String userId;
@@ -210,21 +214,31 @@ public class User {
      * Menampilkan seluruh riwayat transaksi user.
      */
     public void showTransactionHistory() {
-        System.out.println("\n╔════════════════════════════════════════════════════╗");
-        System.out.println("║         RIWAYAT TRANSAKSI " + name + "                ║");
-        System.out.println("╚════════════════════════════════════════════════════╝");
+        System.out.println("\n╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");         
+        System.out.println(BOLD_WHITE + "║ * RIWAYAT TRANSAKSI                                           ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Menampilkan riwayat transaksi dari saudara " + String.format("%-16s", name) + " ║" + RESET);
+        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
 
         if (transactionHistory.isEmpty()) {
-            System.out.println("ℹ️  Belum ada riwayat transaksi.");
+            System.out.println("║                                                               ║");         
+            System.out.println("║  \u2715 Belum ada riwayat transaksi.                               ║");
+            System.out.println("║                                                               ║");         
+            System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+            System.out.println();
             return;
         }
 
         for (int i = 0; i < transactionHistory.size(); i++) {
             Transaction tx = transactionHistory.get(i);
-            System.out.println((i + 1) + ". " + tx.toString());
+            System.out.println("║ " + String.format("%-62s", (i + 1) + ". " + tx.toString()) + "║");
         }
 
-        System.out.println("─────────────────────────────────────────────────────");
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+
+
+        System.out.println();
+        System.out.println("─────────────────────────────────────────────────────────────────");
         System.out.println("Total Transaksi: " + transactionHistory.size());
         System.out.println();
     }

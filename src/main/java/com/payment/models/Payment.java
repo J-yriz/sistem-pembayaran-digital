@@ -5,6 +5,11 @@ package com.payment.models;
  */
 public class Payment {
 
+    private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
+    private static final String ITALIC_DARK_GRAY  = "\u001B[3;38;5;59m";
+    private static final String BOLD_WHITE        = "\u001B[1;38;5;15m";
+    private static final String RESET             = "\u001B[0m";
+
     private String paymentId;
     private double amount;
     private User sender;
@@ -114,14 +119,19 @@ public class Payment {
         double fee = calculateFee();
         double totalDebit = amount + fee;
 
-        System.out.println("\n=== RECEIPT PEMBAYARAN ===");
-        System.out.println("Payment ID : " + paymentId);
-        System.out.println("Method     : " + getPaymentMethod());
-        System.out.println("Sender     : " + sender.getName());
-        System.out.println("Receiver   : " + receiver.getName());
-        System.out.println("Amount     : Rp" + String.format("%,.0f", amount));
-        System.out.println("Fee        : Rp" + String.format("%,.0f", fee));
-        System.out.println("Total Debit: Rp" + String.format("%,.0f", totalDebit));
-        System.out.println("Status     : " + status);
+        System.out.println("\n╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");
+        System.out.println(BOLD_WHITE + "║ * RECEIPT PEMBAYARAN                                          ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║    Terima kasih telah menggunakan layanan kami                ║" + RESET);
+        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
+        System.out.println("║    Payment ID : " + BOLD_WHITE + String.format("%-46s", paymentId) +  RESET + "║");
+        System.out.println("║    Method     : " + BOLD_WHITE + String.format("%-46s", getPaymentMethod()) +  RESET + "║");
+        System.out.println("║    Sender     : " + BOLD_WHITE + String.format("%-46s", sender.getName()) +  RESET + "║");
+        System.out.println("║    Receiver   : " + BOLD_WHITE + String.format("%-46s", receiver.getName()) +  RESET + "║");
+        System.out.println("║    Amount     : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", amount)) +  RESET + "║");
+        System.out.println("║    Fee        : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", fee)) +  RESET + "║");
+        System.out.println("║    Total Debit: Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", totalDebit)) +  RESET + "║");
+        System.out.println("║    Status     : " + BOLD_WHITE + String.format("%-46s", status) +  RESET + "║");
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
     }
 }
