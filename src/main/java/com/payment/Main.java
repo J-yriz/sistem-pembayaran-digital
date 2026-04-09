@@ -35,8 +35,7 @@ public class Main {
             switch (choice) {
                 case 1:
                     loginUser();
-                    System.out.println("Command executed, please wait for awhile...");
-                    System.out.println("─────────────────────────────────────────────────────────────────");
+                    
                     break;
                 case 2:
                     if (currentUser != null) {
@@ -46,8 +45,7 @@ public class Main {
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                     }
-                    System.out.println("Command executed, please wait for awhile...");
-                    System.out.println("─────────────────────────────────────────────────────────────────");
+                    
                     break;
                 case 3:
                     if (currentUser != null) {
@@ -55,8 +53,7 @@ public class Main {
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                     }
-                    System.out.println("Command executed, please wait for awhile...");
-                    System.out.println("─────────────────────────────────────────────────────────────────");
+                    
                     break;
                 case 4:
                     if (currentUser != null) {
@@ -64,8 +61,7 @@ public class Main {
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                     }
-                    System.out.println("Command executed, please wait for awhile...");
-                    System.out.println("─────────────────────────────────────────────────────────────────");
+                    
                     break;
                 case 5:
                     if (currentUser != null) {
@@ -73,8 +69,7 @@ public class Main {
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                     }
-                    System.out.println("Command executed, please wait for awhile...");
-                    System.out.println("─────────────────────────────────────────────────────────────────");
+                    
                     break;
                 case 6:
                     if (currentUser != null) {
@@ -83,8 +78,7 @@ public class Main {
                     } else {
                         System.out.println("ℹ️  Anda belum login.");
                     }
-                    System.out.println("Command executed, please wait for awhile...");
-                    System.out.println("─────────────────────────────────────────────────────────────────");
+                    
                     break;
                 case 0:
                     isRunning = false;
