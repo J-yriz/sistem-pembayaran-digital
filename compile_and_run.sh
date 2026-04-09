@@ -3,6 +3,7 @@
 # ==========================================
 # SCRIPT COMPILE & RUN JAVA CLASSIC
 # ==========================================
+chcp.com 65001 > /dev/null 2>&1
 
 # 1. Buat folder 'bin' untuk menampung file .class (jika belum ada)
 mkdir -p bin
@@ -18,7 +19,7 @@ if [ $? -eq 0 ]; then
     echo ""
     
     # 3. Jalankan program dengan classpath (-cp) ke folder bin
-    java -cp bin com.payment.Main
+    java -Dfile.encoding=UTF-8 -cp bin com.payment.Main
 else
     echo "❌ Compile Gagal! Silakan cek error di atas."
     exit 1
