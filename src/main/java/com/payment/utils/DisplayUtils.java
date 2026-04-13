@@ -1,13 +1,5 @@
 package com.payment.utils;
 
-/**
- * Class DisplayUtils - Bertanggung Jawab untuk Menampilkan Tampilan CLI yang Konsisten dan Estetis.
- * 
- * Deskripsi Detail:
- * Kelas ini menyimpan semua metode statis yang digunakan untuk menampilkan berbagai bagian
- * antarmuka pengguna di terminal. Dengan menggunakan ANSI color codes, kelas ini memberikan
- * tampilan yang lebih menarik dan mudah dibaca, serta menjaga konsistensi visual di seluruh aplikasi.
- */
 public class DisplayUtils {
 
     // ANSI Color Codes
