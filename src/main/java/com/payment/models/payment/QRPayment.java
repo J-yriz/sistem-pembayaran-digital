@@ -1,8 +1,7 @@
-package com.payment.models;
+package com.payment.models.payment;
 
-/**
- * QRPayment adalah turunan Payment untuk simulasi pembayaran menggunakan QR.
- */
+import com.payment.models.user.User;
+
 public class QRPayment extends Payment {
 
     private String qrCode;
@@ -12,12 +11,8 @@ public class QRPayment extends Payment {
         this.qrCode = qrCode;
     }
 
-    public String getQrCode() {
-        return qrCode;
-    }
-
     @Override
-    public boolean validate() {
+    protected boolean validate() {
         return super.validate()
             && qrCode != null
             && qrCode.startsWith("QR-")
@@ -25,7 +20,7 @@ public class QRPayment extends Payment {
     }
 
     @Override
-    public String getPaymentMethod() {
+    protected String getPaymentMethod() {
         return "QR Payment";
     }
 }

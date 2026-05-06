@@ -1,8 +1,5 @@
-package com.payment.models;
+package com.payment.models.user;
 
-/**
- * RegularUser merepresentasikan akun standar dengan limit dan cashback dasar.
- */
 public class RegularUser extends User {
 
     private static final double TRANSACTION_LIMIT = 2_000_000;

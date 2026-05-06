@@ -1,8 +1,7 @@
-package com.payment.models;
+package com.payment.models.payment;
 
-/**
- * WalletTransfer adalah turunan Payment untuk transfer antar user di aplikasi.
- */
+import com.payment.models.user.User;
+
 public class WalletTransfer extends Payment {
 
     private String destinationPhone;
@@ -12,12 +11,8 @@ public class WalletTransfer extends Payment {
         this.destinationPhone = destinationPhone;
     }
 
-    public String getDestinationPhone() {
-        return destinationPhone;
-    }
-
     @Override
-    public boolean validate() {
+    protected boolean validate() {
         return super.validate()
             && destinationPhone != null
             && destinationPhone.startsWith("08")
@@ -25,7 +20,7 @@ public class WalletTransfer extends Payment {
     }
 
     @Override
-    public String getPaymentMethod() {
+    protected String getPaymentMethod() {
         return "Wallet Transfer";
     }
 }

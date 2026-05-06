@@ -1,40 +1,26 @@
 package com.payment;
 
-import com.payment.models.BankTransfer;
-import com.payment.models.MerchantUser;
-import com.payment.models.Payment;
-import com.payment.models.PremiumUser;
-import com.payment.models.QRPayment;
-import com.payment.models.RegularUser;
-import com.payment.models.User;
-import com.payment.models.WalletTransfer;
+import com.payment.models.payment.BankTransfer;
+import com.payment.models.payment.Payment;
+import com.payment.models.payment.QRPayment;
+import com.payment.models.payment.WalletTransfer;
+import com.payment.models.user.MerchantUser;
+import com.payment.models.user.PremiumUser;
+import com.payment.models.user.RegularUser;
+import com.payment.models.user.User;
 import com.payment.utils.DisplayUtils;
 import java.util.Scanner;
 
-/**
- * Main Class - Entry Point Sistem Pembayaran Digital
- * 
- * Milestone 3 Features:
- * - User parent class + 3 subclass user
- * - Payment parent class + 3 subclass payment
- * - Login sebagai jenis akun berbeda
- * - Integrasi pembayaran via object turunan Payment
- */
 public class Main {
-    // Italic + Light Gray foreground
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
 
-    // Bold + White foreground
     private static final String BOLD_WHITE = "\u001B[1;38;5;15m";
 
-    // Reset
     private static final String RESET = "\u001B[0m";
 
-    static Scanner scanner = new Scanner(System.in);
-    
-    static User[] users = new User[3];
-    
-    static User currentUser = null;
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final User[] users = new User[3];
+    private static User currentUser = null;
 
     public static void main(String[] args) {
         DisplayUtils.displayHeader();
@@ -53,44 +39,44 @@ public class Main {
                     if (currentUser != null) {
                         currentUser.showBalance();
                     } else {
-                        System.out.println("✗ Silakan login terlebih dahulu.");
+                        System.out.println("Gagal: Silakan login terlebih dahulu.");
                     }
                     break;
                 case 3:
                     if (currentUser != null) {
                         performTopUp();
                     } else {
-                        System.out.println("✗ Silakan login terlebih dahulu.");
+                        System.out.println("Gagal: Silakan login terlebih dahulu.");
                     }
                     break;
                 case 4:
                     if (currentUser != null) {
                         performPayment();
                     } else {
-                        System.out.println("✗ Silakan login terlebih dahulu.");
+                        System.out.println("Gagal: Silakan login terlebih dahulu.");
                     }
                     break;
                 case 5:
                     if (currentUser != null) {
                         currentUser.showTransactionHistory();
                     } else {
-                        System.out.println("✗ Silakan login terlebih dahulu.");
+                        System.out.println("Gagal: Silakan login terlebih dahulu.");
                     }
                     break;
                 case 6:
                     if (currentUser != null) {
-                        System.out.println("👋 " + currentUser.getName() + " logout. Sampai jumpa!");
+                        System.out.println("Logout: " + currentUser.getName() + " telah keluar. Sampai jumpa.");
                         currentUser = null;
                     } else {
-                        System.out.println("ℹ️  Anda belum login.");
+                        System.out.println("Info: Anda belum login.");
                     }
                     break;
                 case 0:
                     isRunning = false;
-                    System.out.println("👋 Terima kasih telah menggunakan 67 Cents. Sampai jumpa!");
+                    System.out.println("Terima kasih telah menggunakan 67 Cents. Sampai jumpa.");
                     break;
                 default:
-                    System.out.println("✗ Pilihan tidak valid. Silakan coba lagi.");
+                    System.out.println("Gagal: Pilihan tidak valid. Silakan coba lagi.");
             }
 
             System.out.println();
@@ -99,19 +85,13 @@ public class Main {
         scanner.close();
     }
 
-    /**
-     * Inisialisasi data user sesuai tipe akun Milestone 3.
-     */
-    static void initializeUsers() {
+    private static void initializeUsers() {
         users[0] = new RegularUser("U001", "Budi", "081234567890", 100000);
         users[1] = new PremiumUser("U002", "Siti", "089876543210", 200000);
         users[2] = new MerchantUser("U003", "Toko Makmur", "081122334455", 300000);
     }
 
-    /**
-     * Menampilkan saldo awal semua user saat aplikasi mulai.
-     */
-    static void showInitialBalance() {
+    private static void showInitialBalance() {
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
         System.out.println(BOLD_WHITE + "║ * SALDO AWAL                                                  ║" + RESET);
@@ -123,10 +103,7 @@ public class Main {
         System.out.println("╚═══════════════════════════════════════════════════════════════╝");
     }
 
-    /**
-     * Menampilkan menu utama dan membaca pilihan user.
-     */
-    static int displayMainMenu() {
+    private static int displayMainMenu() {
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
         System.out.println(BOLD_WHITE + "║ * MENU UTAMA                                                  ║" + RESET);
@@ -140,31 +117,25 @@ public class Main {
         return readIntInRange("Pilih menu: ", 0, 6);
     }
 
-    /**
-     * Membaca input integer dengan batas nilai minimum dan maksimum.
-     */
-    static int readIntInRange(String prompt, int min, int max) {
+    private static int readIntInRange(String prompt, int min, int max) {
         while (true) {
             System.out.print(prompt);
 
             try {
                 int value = scanner.nextInt();
                 if (value < min || value > max) {
-                    System.out.println("✗ Input harus antara " + min + " - " + max + ".");
+                    System.out.println("Gagal: Input harus antara " + min + " - " + max + ".");
                     continue;
                 }
                 return value;
             } catch (java.util.InputMismatchException e) {
-                System.out.println("✗ Input harus berupa angka.");
+                System.out.println("Gagal: Input harus berupa angka.");
                 scanner.nextLine();
             }
         }
     }
 
-    /**
-     * Login sebagai salah satu user yang tersedia.
-     */
-    static void loginUser() {
+    private static void loginUser() {
         System.out.println("\n=== LOGIN ===");
         System.out.println("Pilih user:");
 
@@ -186,13 +157,10 @@ public class Main {
 
         int choice = readIntInRange("Pilih nomor: ", 1, users.length);
         currentUser = users[choice - 1];
-        System.out.println("✓ Login sebagai " + currentUser.getName() + " berhasil!");
+        System.out.println("Login berhasil sebagai " + currentUser.getName() + ".");
     }
 
-    /**
-     * Proses top up saldo user aktif.
-     */
-    static void performTopUp() {
+    private static void performTopUp() {
         System.out.println("\n=== TOP UP ===");
         System.out.println("User: " + currentUser.getName());
 
@@ -201,10 +169,7 @@ public class Main {
         currentUser.showBalance();
     }
 
-    /**
-     * Proses pembayaran / transfer menggunakan subclass Payment.
-     */
-    static void performPayment() {
+    private static void performPayment() {
         System.out.println("\n=== BAYAR / TRANSFER ===");
         System.out.println("Pengirim: " + currentUser.getName() + " (" + currentUser.getAccountType() + ")");
 
@@ -224,10 +189,7 @@ public class Main {
         currentUser.showBalance();
     }
 
-    /**
-     * Memilih user penerima transaksi dari list user selain akun yang sedang login.
-     */
-    static User chooseReceiverUser() {
+    private static User chooseReceiverUser() {
         System.out.println("Pilih penerima:");
         int optionNumber = 1;
         User[] receiverOptions = new User[users.length - 1];
@@ -246,10 +208,7 @@ public class Main {
         return receiverOptions[selectedIndex - 1];
     }
 
-    /**
-     * Membuat object Payment berdasarkan metode yang dipilih user.
-     */
-    static Payment createPayment(double amount, User receiver) {
+    private static Payment createPayment(double amount, User receiver) {
         System.out.println("Pilih metode pembayaran:");
         System.out.println("1. Bank Transfer");
         System.out.println("2. QR Payment");
@@ -258,7 +217,6 @@ public class Main {
         int paymentChoice = readIntInRange("Pilih metode: ", 1, 3);
         String paymentId = "P" + System.currentTimeMillis();
 
-        // Konsumsi sisa newline dari input angka sebelum membaca string.
         scanner.nextLine();
 
         switch (paymentChoice) {
@@ -278,30 +236,26 @@ public class Main {
                 return new WalletTransfer(paymentId, amount, currentUser, receiver, receiver.getPhone());
 
             default:
-                System.out.println("✗ Metode pembayaran tidak valid.");
+                System.out.println("Gagal: Metode pembayaran tidak valid.");
                 return null;
         }
     }
 
-    /**
-     * Membaca nominal positif dari user agar input tidak menyebabkan crash.
-     */
-    static double readPositiveAmount(String prompt) {
+    private static double readPositiveAmount(String prompt) {
         while (true) {
             System.out.print(prompt);
 
             try {
                 double amount = scanner.nextDouble();
                 if (amount <= 0) {
-                    System.out.println("✗ Nominal harus lebih dari 0.");
+                    System.out.println("Gagal: Nominal harus lebih dari 0.");
                     continue;
                 }
                 return amount;
             } catch (java.util.InputMismatchException e) {
-                System.out.println("✗ Nominal harus berupa angka.");
+                System.out.println("Gagal: Nominal harus berupa angka.");
                 scanner.nextLine();
             }
         }
     }
 }
-

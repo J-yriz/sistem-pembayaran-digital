@@ -1,8 +1,5 @@
-package com.payment.models;
+package com.payment.models.user;
 
-/**
- * MerchantUser dipakai sebagai akun merchant yang menerima pembayaran dari user lain.
- */
 public class MerchantUser extends User {
 
     private static final double TRANSACTION_LIMIT = 50_000_000;
@@ -27,9 +24,6 @@ public class MerchantUser extends User {
         return CASHBACK_RATE;
     }
 
-    /**
-     * Method khusus merchant untuk menerima pembayaran.
-     */
     public void receivePayment(double amount) {
         receiveTransfer(amount);
     }

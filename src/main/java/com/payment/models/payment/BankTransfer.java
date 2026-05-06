@@ -1,8 +1,7 @@
-package com.payment.models;
+package com.payment.models.payment;
 
-/**
- * BankTransfer adalah turunan Payment untuk simulasi transfer antar rekening.
- */
+import com.payment.models.user.User;
+
 public class BankTransfer extends Payment {
 
     private String bankName;
@@ -21,16 +20,8 @@ public class BankTransfer extends Payment {
         this.destinationAccountNumber = destinationAccountNumber;
     }
 
-    public String getBankName() {
-        return bankName;
-    }
-
-    public String getDestinationAccountNumber() {
-        return destinationAccountNumber;
-    }
-
     @Override
-    public boolean validate() {
+    protected boolean validate() {
         return super.validate()
             && bankName != null
             && !bankName.isBlank()
@@ -39,7 +30,7 @@ public class BankTransfer extends Payment {
     }
 
     @Override
-    public String getPaymentMethod() {
+    protected String getPaymentMethod() {
         return "Bank Transfer";
     }
 }

@@ -1,8 +1,8 @@
-package com.payment.models;
+package com.payment.models.payment;
 
-/**
- * Payment adalah parent class untuk seluruh metode pembayaran pada milestone 3.
- */
+import com.payment.models.user.MerchantUser;
+import com.payment.models.user.User;
+
 public class Payment {
 
     private String paymentId;
@@ -19,49 +19,25 @@ public class Payment {
         this.status = "PENDING";
     }
 
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
+    private void setStatus(String status) {
         this.status = status;
     }
 
-    /**
-     * Menjalankan pembayaran dengan validasi dasar.
-     */
     public void execute() {
         if (!validate()) {
             setStatus("FAILED");
-            System.out.println("✗ Data transaksi tidak valid.");
+            System.out.println("Gagal: Data transaksi tidak valid.");
             return;
         }
 
         if (amount > sender.getTransactionLimit()) {
             setStatus("FAILED");
-            System.out.println("✗ Nominal melebihi limit transaksi akun " + sender.getAccountType() + ".");
+            System.out.println("Gagal: Nominal melebihi limit transaksi akun " + sender.getAccountType() + ".");
             return;
         }
 
         if (!sender.hasSufficientBalance(amount)) {
             setStatus("FAILED");
-            // Reuse validasi existing pada User agar history FAILED tetap tercatat.
             sender.pay(amount);
             return;
         }
@@ -78,10 +54,7 @@ public class Payment {
         printReceipt();
     }
 
-    /**
-     * Validasi dasar parent Payment.
-     */
-    public boolean validate() {
+    protected boolean validate() {
         return paymentId != null
             && !paymentId.isBlank()
             && amount > 0
@@ -90,17 +63,11 @@ public class Payment {
             && sender != receiver;
     }
 
-    /**
-     * Nama metode pembayaran default.
-     */
-    public String getPaymentMethod() {
+    protected String getPaymentMethod() {
         return "Generic Payment";
     }
 
-    /**
-     * Mencetak ringkasan transaksi setelah berhasil.
-     */
-    public void printReceipt() {
+    private void printReceipt() {
         System.out.println("\n=== RECEIPT PEMBAYARAN ===");
         System.out.println("Payment ID : " + paymentId);
         System.out.println("Method     : " + getPaymentMethod());
