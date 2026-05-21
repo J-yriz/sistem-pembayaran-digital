@@ -7,13 +7,9 @@ import java.util.List;
 public class User {
 
     private String userId;
-
     private String name;
-
     private String phone;
-
     private double balance;
-
     private List<Transaction> transactionHistory;
 
     public User(String userId, String name, String phone, double balance) {

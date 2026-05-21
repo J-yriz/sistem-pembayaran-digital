@@ -12,10 +12,9 @@ import com.payment.utils.DisplayUtils;
 import java.util.Scanner;
 
 public class Main {
+    
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
-
     private static final String BOLD_WHITE = "\u001B[1;38;5;15m";
-
     private static final String RESET = "\u001B[0m";
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -33,7 +32,11 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    loginUser();
+                    if (currentUser == null) {
+                        loginUser();
+                    } else {
+                        System.out.println("Info: Anda sudah login sebagai " + currentUser.getName() + ".");
+                    }
                     break;
                 case 2:
                     if (currentUser != null) {
