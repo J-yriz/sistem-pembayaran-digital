@@ -1,8 +1,5 @@
 package com.payment.models;
 
-/**
- * Payment adalah parent class untuk seluruh metode pembayaran pada milestone 3.
- */
 public class Payment {
 
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
@@ -44,14 +41,11 @@ public class Payment {
         return status;
     }
 
-    public void setStatus(String status) {
+    private void setStatus(String status) {
         this.status = status;
     }
 
-    /**
-     * Menjalankan pembayaran dengan validasi dasar.
-     */
-    public void execute() {
+    public final void execute() {
         if (!validate()) {
             setStatus("FAILED");
             System.out.println("✗ Data transaksi tidak valid.");
@@ -69,7 +63,6 @@ public class Payment {
 
         if (!sender.hasSufficientBalance(totalDebit)) {
             setStatus("FAILED");
-            // Reuse validasi existing pada User agar history FAILED tetap tercatat.
             sender.pay(totalDebit);
             return;
         }
@@ -82,13 +75,15 @@ public class Payment {
             receiver.receiveTransfer(amount);
         }
 
+        double cashback = sender.calculateCashback(amount);
+        if (cashback > 0) {
+            sender.receiveCashback(cashback);
+        }
+
         setStatus("SUCCESS");
         printReceipt();
     }
 
-    /**
-     * Validasi dasar parent Payment.
-     */
     public boolean validate() {
         return paymentId != null
             && !paymentId.isBlank()
@@ -98,23 +93,14 @@ public class Payment {
             && sender != receiver;
     }
 
-    /**
-     * Biaya transaksi default pada parent Payment.
-     */
     public double calculateFee() {
         return 0.0;
     }
 
-    /**
-     * Nama metode pembayaran default.
-     */
     public String getPaymentMethod() {
         return "Generic Payment";
     }
 
-    /**
-     * Mencetak ringkasan transaksi setelah berhasil.
-     */
     public void printReceipt() {
         double fee = calculateFee();
         double totalDebit = amount + fee;
@@ -131,6 +117,7 @@ public class Payment {
         System.out.println("║    Amount     : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", amount)) +  RESET + "║");
         System.out.println("║    Fee        : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", fee)) +  RESET + "║");
         System.out.println("║    Total Debit: Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", totalDebit)) +  RESET + "║");
+        System.out.println("║    Cashback   : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", sender.calculateCashback(amount))) +  RESET + "║");
         System.out.println("║    Status     : " + BOLD_WHITE + String.format("%-46s", status) +  RESET + "║");
         System.out.println("╚═══════════════════════════════════════════════════════════════╝");
     }

@@ -1,12 +1,10 @@
 package com.payment.models;
 
-/**
- * BankTransfer adalah turunan Payment untuk simulasi transfer antar rekening.
- */
+
 public class BankTransfer extends Payment {
 
-    private String bankName;
-    private String destinationAccountNumber;
+    private final String bankName;
+    private final String destinationAccountNumber;
 
     public BankTransfer(
         String paymentId,

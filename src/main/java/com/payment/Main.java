@@ -11,34 +11,23 @@ import com.payment.models.WalletTransfer;
 import com.payment.utils.DisplayUtils;
 import java.util.Scanner;
 
-/**
- * Main Class - Entry Point Sistem Pembayaran Digital
- * 
- * Milestone 3 Features:
- * - User parent class + 3 subclass user
- * - Payment parent class + 3 subclass payment
- * - Login sebagai jenis akun berbeda
- * - Integrasi pembayaran via object turunan Payment
- */
+
 public class Main {
-    // Italic + Light Gray foreground
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
     private static final String ITALIC_DARK_GRAY = "\u001B[3;38;5;59m";
-
-    // Bold + White foreground
+    
     private static final String BOLD_WHITE = "\u001B[1;38;5;15m";
-
-    // Reset
+    
     private static final String RESET = "\u001B[0m";
 
-    static Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
     
-    static User[] users = new User[3];
+    private static final User[] users = new User[3];
     
-    static User currentUser = null;
+    private static User currentUser = null;
 
     public static void main(String[] args) {
-        DisplayUtils.ASCIIArt(args);
+        // DisplayUtils.ASCIIArt(args);
         DisplayUtils.displayHeader();
         initializeUsers();
         showInitialBalance();
@@ -56,7 +45,7 @@ public class Main {
                         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
                         currentUser.showBalance();
                         System.out.println("╚═══════════════════════════════════════════════════════════════╝");
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
@@ -66,12 +55,12 @@ public class Main {
                     if (currentUser != null) {
                         performTopUp();
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
@@ -79,12 +68,12 @@ public class Main {
                     if (currentUser != null) {
                         performPayment();
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
@@ -92,12 +81,12 @@ public class Main {
                     if (currentUser != null) {
                         currentUser.showTransactionHistory();
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("✗ Silakan login terlebih dahulu.");
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
@@ -106,12 +95,12 @@ public class Main {
                         System.out.println("👋 " + currentUser.getName() + " logout. Sampai jumpa!");
                         currentUser = null;
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     } else {
                         System.out.println("ℹ️  Anda belum login.");
                         
-                        System.out.println("Command executed, please wait for awhile...");
+                        // System.out.println("Command executed, please wait for awhile...");
                         System.out.println("─────────────────────────────────────────────────────────────────");
                     }
                     break;
@@ -132,7 +121,7 @@ public class Main {
     /**
      * Inisialisasi data user sesuai tipe akun Milestone 3.
      */
-    static void initializeUsers() {
+    private static void initializeUsers() {
         users[0] = new RegularUser("U001", "Budi", "081234567890", 100000);
         users[1] = new PremiumUser("U002", "Siti", "089876543210", 200000);
         users[2] = new MerchantUser("U003", "Toko Makmur", "081122334455", 300000);
@@ -141,7 +130,7 @@ public class Main {
     /**
      * Menampilkan saldo awal semua user saat aplikasi mulai.
      */
-    static void showInitialBalance() {
+    private static void showInitialBalance() {
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
         System.out.println(BOLD_WHITE + "║ * SALDO AWAL                                                  ║" + RESET);
@@ -156,7 +145,7 @@ public class Main {
     /**
      * Menampilkan menu utama dan membaca pilihan user.
      */
-    static int displayMainMenu() {
+    private static int displayMainMenu() {
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
         System.out.println(BOLD_WHITE + "║ * MENU UTAMA                                                  ║" + RESET);
@@ -174,7 +163,7 @@ public class Main {
     /**
      * Membaca input integer dengan batas nilai minimum dan maksimum.
      */
-    static int readIntInRange(String prompt, int min, int max) {
+    private static int readIntInRange(String prompt, int min, int max) {
         while (true) {
             System.out.print(BOLD_WHITE + prompt + RESET);
             
@@ -197,7 +186,7 @@ public class Main {
     /**
      * Login sebagai salah satu user yang tersedia.
      */
-    static void loginUser() {
+    private static void loginUser() {
         System.out.println("Input executed, please wait for awhile...");
         System.out.print("───────────────────────────────────────────────────────────────── \n \n");
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
@@ -268,7 +257,7 @@ public class Main {
     /**
      * Proses top up saldo user aktif.
      */
-    static void performTopUp() {
+    private static void performTopUp() {
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");         
         System.out.println(BOLD_WHITE + "║ * TOP UP SALDO                                                ║" + RESET);
@@ -286,7 +275,7 @@ public class Main {
     /**
      * Proses pembayaran / transfer menggunakan subclass Payment.
      */
-    static void performPayment() {
+    private static void performPayment() {
 
         // String.format("Limit: Rp %,.0f | CB: %.0f%%", limit, cbRate)
         String senderInfo = "Pengirim: " + currentUser.getName() + " (" + currentUser.getAccountType() + ")";
@@ -322,7 +311,7 @@ public class Main {
     /**
      * Memproses pembayaran menggunakan reference parent Payment (polymorphism).
      */
-    static void processPayment(Payment payment) {
+    private static void processPayment(Payment payment) {
         if (payment == null) {
             System.out.println("✗ Pembayaran tidak dapat diproses.");
             return;
@@ -334,7 +323,7 @@ public class Main {
     /**
      * Memilih user penerima transaksi dari list user selain akun yang sedang login.
      */
-    static User chooseReceiverUser() {
+    private static User chooseReceiverUser() {
         System.out.println(BOLD_WHITE + "\u21B3 Pilih penerima:" + RESET);
         
         int optionNumber = 1;
@@ -363,7 +352,7 @@ public class Main {
     /**
      * Membuat object Payment berdasarkan metode yang dipilih user.
      */
-    static Payment createPayment(double amount, User receiver) {
+    private static Payment createPayment(double amount, User receiver) {
         System.out.println(BOLD_WHITE + "\u21B3 Pilih metode pembayaran:" + RESET);
         System.out.println("  1. Bank Transfer");
         System.out.println("  2. QR Payment");
@@ -402,7 +391,7 @@ public class Main {
     /**
      * Membaca nominal positif dari user agar input tidak menyebabkan crash.
      */
-    static double readPositiveAmount(String prompt) {
+    private static double readPositiveAmount(String prompt) {
         while (true) {
             
             System.out.print(prompt);
@@ -421,4 +410,3 @@ public class Main {
         }
     }
 }
-

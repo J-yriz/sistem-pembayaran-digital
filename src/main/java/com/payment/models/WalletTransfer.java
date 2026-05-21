@@ -5,7 +5,7 @@ package com.payment.models;
  */
 public class WalletTransfer extends Payment {
 
-    private String destinationPhone;
+    private final String destinationPhone;
 
     public WalletTransfer(String paymentId, double amount, User sender, User receiver, String destinationPhone) {
         super(paymentId, amount, sender, receiver);

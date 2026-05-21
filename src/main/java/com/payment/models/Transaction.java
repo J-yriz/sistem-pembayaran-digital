@@ -17,16 +17,16 @@ public class Transaction {
     
     // ======== ATRIBUT PRIVATE ========
     // Menyimpan timestamp kapan transaksi terjadi (format: 2024-04-07 14:30:45)
-    private LocalDateTime timestamp;
+    private final LocalDateTime timestamp;
     
     // Menyimpan nominal uang yang ditransaksikan (contoh: 50000)
-    private double amount;
+    private final double amount;
     
     // Tipe transaksi - bisa "TOP_UP" atau "PAY" (withdrawal/pembayaran)
-    private String type;
+    private final String type;
     
     // Status transaksi - bisa "SUCCESS" atau "FAILED" (untuk validasi nantinya)
-    private String status;
+    private final String status;
     
     // ======== CONSTRUCTOR ========
     /**
@@ -83,15 +83,6 @@ public class Transaction {
         return status;
     }
     
-    // ======== SETTER METHODS ========
-    /**
-     * Mengubah status transaksi jika diperlukan
-     * @param status = status baru untuk transaksi
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    
     // ======== UTILITY METHODS ========
     /**
      * Menampilkan informasi transaksi dalam format yang mudah dibaca
@@ -111,6 +102,8 @@ public class Transaction {
             icon = "↑ TOPUP";
         } else if ("RECEIVE".equals(type)) {
             icon = "↓ TERIMA";
+        } else if ("CASHBACK".equals(type)) {
+            icon = "↑ CASHBACK";
         } else {
             icon = "↓ BAYAR";
         }

@@ -26,4 +26,9 @@ public class PremiumUser extends User {
     public double getCashbackRate() {
         return CASHBACK_RATE;
     }
+
+    @Override
+    public double calculateCashback(double transactionAmount) {
+        return Math.min(super.calculateCashback(transactionAmount), 50_000);
+    }
 }

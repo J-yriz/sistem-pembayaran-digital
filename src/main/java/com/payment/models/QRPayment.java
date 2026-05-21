@@ -5,7 +5,7 @@ package com.payment.models;
  */
 public class QRPayment extends Payment {
 
-    private String qrCode;
+    private final String qrCode;
 
     public QRPayment(String paymentId, double amount, User sender, User receiver, String qrCode) {
         super(paymentId, amount, sender, receiver);

@@ -1,6 +1,7 @@
 package com.payment.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,71 +18,52 @@ public class User {
     private static final String BOLD_WHITE        = "\u001B[1;38;5;15m";
     private static final String RESET             = "\u001B[0m";
     
-    // Menyimpan ID unik user (contoh: U001, U002)
     private String userId;
     
-    // Menyimpan nama user lengkap
     private String name;
     
-    // Menyimpan nomor telepon user
     private String phone;
     
-    // Menyimpan saldo uang dalam rupiah (tidak boleh negatif)
     private double balance;
     
-    // Menyimpan riwayat semua transaksi user.
-    private List<Transaction> transactionHistory;
+    private final List<Transaction> transactionHistory;
 
-    /**
-     * Constructor untuk membuat object User baru
-     */
+    
     public User(String userId, String name, String phone, double balance) {
+        this.transactionHistory = new ArrayList<>();
         setUserId(userId);
         setName(name);
         setPhone(phone);
         setBalance(balance);
-        this.transactionHistory = new ArrayList<>();
     }
 
-    /**
-     * Mendapatkan ID user
-     */
+    
     public String getUserId() {
         return userId;
     }
     
-    /**
-     * Mendapatkan nama user
-     */
+    
     public String getName() {
         return name;
     }
     
-    /**
-     * Mendapatkan nomor telepon user
-     */
+    
     public String getPhone() {
         return phone;
     }
     
-    /**
-     * Mendapatkan saldo user saat ini
-     */
+    
     public double getBalance() {
         return balance;
     }
     
-    /**
-     * Mendapatkan list seluruh transaction history user.
-     */
+    
     public List<Transaction> getTransactionHistory() {
-        return transactionHistory;
+        return Collections.unmodifiableList(transactionHistory);
     }
 
-    /**
-     * Mengubah ID user dengan validasi sederhana.
-     */
-    public void setUserId(String userId) {
+    
+    private void setUserId(String userId) {
         if (userId == null || userId.isBlank()) {
             System.out.println("✗ User ID tidak boleh kosong.");
             return;
@@ -89,7 +71,7 @@ public class User {
         this.userId = userId;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         if (name == null || name.isBlank()) {
             System.out.println("✗ Nama tidak boleh kosong.");
             return;
@@ -97,7 +79,7 @@ public class User {
         this.name = name;
     }
 
-    public void setPhone(String phone) {
+    private void setPhone(String phone) {
         if (phone == null || phone.isBlank()) {
             System.out.println("✗ Nomor telepon tidak boleh kosong.");
             return;
@@ -105,10 +87,8 @@ public class User {
         this.phone = phone;
     }
 
-    /**
-     * Mengubah saldo dengan validasi agar tidak negatif.
-     */
-    public void setBalance(double balance) {
+    
+    private void setBalance(double balance) {
         if (balance < 0) {
             System.out.println("✗ Saldo tidak boleh negatif.");
             return;
@@ -116,23 +96,18 @@ public class User {
         this.balance = balance;
     }
 
-    /**
-     * Mengganti riwayat transaksi user (misalnya saat load data).
-     */
-    public void setTransactionHistory(List<Transaction> transactionHistory) {
-        if (transactionHistory == null) {
-            this.transactionHistory = new ArrayList<>();
-            return;
+    
+    void replaceTransactionHistory(List<Transaction> transactionHistory) {
+        this.transactionHistory.clear();
+        if (transactionHistory != null) {
+            this.transactionHistory.addAll(transactionHistory);
         }
-        this.transactionHistory = new ArrayList<>(transactionHistory);
     }
 
-    /**
-     * Menambah saldo user (top up).
-     */
+    
     public void topUp(double amount) {
         if (amount > 0) {
-            balance += amount;
+            creditBalance(amount);
             addTransaction(amount, "TOP_UP", "SUCCESS");
             System.out.println("✓ " + name + " top up Rp" + (long)amount + " berhasil.");
         } else {
@@ -152,7 +127,7 @@ public class User {
         }
 
         if (balance >= amount) {
-            balance -= amount;
+            debitBalance(amount);
             addTransaction(amount, "PAY", "SUCCESS");
             System.out.println("✓ " + name + " bayar Rp" + (long)amount + " berhasil.");
         } else {
@@ -161,58 +136,52 @@ public class User {
         }
     }
 
-    /**
-     * Menambah saldo dari transaksi masuk (contoh transfer dari user lain).
-     */
-    public void receiveTransfer(double amount) {
+    void receiveTransfer(double amount) {
         if (amount <= 0) {
             return;
         }
 
-        balance += amount;
+        creditBalance(amount);
         addTransaction(amount, "RECEIVE", "SUCCESS");
     }
 
-    /**
-     * Cek apakah saldo user cukup untuk nominal tertentu.
-     */
+    void receiveCashback(double amount) {
+        if (amount <= 0) {
+            return;
+        }
+
+        creditBalance(amount);
+        addTransaction(amount, "CASHBACK", "SUCCESS");
+    }
+
     public boolean hasSufficientBalance(double amount) {
         return balance >= amount;
     }
 
-    /**
-     * Informasi umum tipe akun. Akan dioverride oleh subclass di Milestone 3.
-     */
     public String getAccountType() {
         return "User";
     }
 
-    /**
-     * Limit transaksi default untuk parent class.
-     */
     public double getTransactionLimit() {
         return Double.MAX_VALUE;
     }
 
-    /**
-     * Cashback default untuk parent class.
-     */
     public double getCashbackRate() {
         return 0.0;
     }
 
-    /**
-     * Method untuk menampilkan saldo user saat ini
-     * Format: Saldo Ahmad (U001): Rp 500000
-     */
+    public double calculateCashback(double transactionAmount) {
+        if (transactionAmount <= 0) {
+            return 0.0;
+        }
+        return transactionAmount * getCashbackRate();
+    }
+
     public void showBalance() {
         
         System.out.printf("║ User: %-20s Saldo: Rp %,24.0f ║%n", name, balance);
     }
 
-    /**
-     * Menampilkan seluruh riwayat transaksi user.
-     */
     public void showTransactionHistory() {
         System.out.println("\n╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");         
@@ -243,10 +212,15 @@ public class User {
         System.out.println();
     }
 
-    /**
-     * Helper internal untuk mencatat transaksi ke history.
-     */
     protected void addTransaction(double amount, String type, String status) {
         transactionHistory.add(new Transaction(amount, type, status));
+    }
+
+    private void creditBalance(double amount) {
+        balance += amount;
+    }
+
+    private void debitBalance(double amount) {
+        balance -= amount;
     }
 }

@@ -1,8 +1,6 @@
 package com.payment.models;
 
-/**
- * MerchantUser dipakai sebagai akun merchant yang menerima pembayaran dari user lain.
- */
+
 public class MerchantUser extends User {
 
     private static final double TRANSACTION_LIMIT = 50_000_000;
