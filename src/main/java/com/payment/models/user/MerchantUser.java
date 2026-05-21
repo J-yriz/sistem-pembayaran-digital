@@ -9,6 +9,15 @@ public class MerchantUser extends User {
         super(userId, name, phone, balance);
     }
 
+    public MerchantUser(String userId, String name, String phone, double balance, String pin) {
+        super(userId, name, phone, balance, pin);
+    }
+
+    @Override
+    public String getUserTypeKey() {
+        return "MERCHANT";
+    }
+
     @Override
     public String getAccountType() {
         return "Merchant User";

@@ -9,6 +9,15 @@ public class PremiumUser extends User {
         super(userId, name, phone, balance);
     }
 
+    public PremiumUser(String userId, String name, String phone, double balance, String pin) {
+        super(userId, name, phone, balance, pin);
+    }
+
+    @Override
+    public String getUserTypeKey() {
+        return "PREMIUM";
+    }
+
     @Override
     public String getAccountType() {
         return "Premium User";

@@ -1,5 +1,7 @@
 package com.payment.models.payment;
 
+import com.payment.models.promo.CashbackPromo;
+import com.payment.models.promo.Promo;
 import com.payment.models.user.MerchantUser;
 import com.payment.models.user.User;
 
@@ -20,6 +22,7 @@ public abstract class Payment {
     private User sender;
     private User receiver;
     private String status;
+    private Promo promo;
 
     public Payment(String paymentId, double amount, User sender, User receiver) {
         this.paymentId = paymentId;
@@ -53,6 +56,14 @@ public abstract class Payment {
         this.status = status;
     }
 
+    public void setPromo(Promo promo) {
+        this.promo = promo;
+    }
+
+    public Promo getPromo() {
+        return promo;
+    }
+
     public final void execute() {
         if (!validate()) {
             setStatus("FAILED");
@@ -60,11 +71,28 @@ public abstract class Payment {
             return;
         }
 
+        double effectiveAmount = amount;
         double fee = calculateFee();
-        double totalDebit = amount + fee;
-        double cashback = sender.calculateCashback(amount);
 
-        if (!receiver.canHoldAdditional(amount)) {
+        if (promo != null) {
+            if (!promo.isApplicable(amount)) {
+                setStatus("FAILED");
+                System.out.println("Gagal: Promo tidak berlaku untuk nominal ini.");
+                return;
+            }
+            effectiveAmount = promo.adjustAmount(amount);
+            fee = promo.adjustFee(fee);
+            System.out.println("Info: Promo " + promo.getPromoCode() + " (" + promo.getPromoType() + ") diterapkan.");
+        }
+
+        double totalDebit = effectiveAmount + fee;
+        double cashback = sender.calculateCashback(effectiveAmount);
+
+        if (promo instanceof CashbackPromo cashbackPromo) {
+            cashback += cashbackPromo.calculateBonusCashback(effectiveAmount);
+        }
+
+        if (!receiver.canHoldAdditional(effectiveAmount)) {
             setStatus("FAILED");
             System.out.println("Gagal: Saldo penerima melebihi batas kapasitas dompet.");
             return;
@@ -86,9 +114,9 @@ public abstract class Payment {
         sender.pay(totalDebit);
 
         if (receiver instanceof MerchantUser) {
-            ((MerchantUser) receiver).receivePayment(amount);
+            ((MerchantUser) receiver).receivePayment(effectiveAmount);
         } else {
-            receiver.receiveTransfer(amount);
+            receiver.receiveTransfer(effectiveAmount);
         }
 
         if (cashback > 0) {
@@ -115,8 +143,20 @@ public abstract class Payment {
     public abstract String getPaymentMethod();
 
     public void printReceipt() {
+        double effectiveAmount = amount;
         double fee = calculateFee();
-        double totalDebit = amount + fee;
+        double promoCashback = 0;
+
+        if (promo != null && promo.isApplicable(amount)) {
+            effectiveAmount = promo.adjustAmount(amount);
+            fee = promo.adjustFee(fee);
+            if (promo instanceof CashbackPromo cashbackPromo) {
+                promoCashback = cashbackPromo.calculateBonusCashback(effectiveAmount);
+            }
+        }
+
+        double totalDebit = effectiveAmount + fee;
+        double totalCashback = sender.calculateCashback(effectiveAmount) + promoCashback;
 
         System.out.println("\n╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
@@ -127,10 +167,13 @@ public abstract class Payment {
         System.out.println("║    Method     : " + BOLD_WHITE + String.format("%-46s", getPaymentMethod()) +  RESET + "║");
         System.out.println("║    Sender     : " + BOLD_WHITE + String.format("%-46s", sender.getName()) +  RESET + "║");
         System.out.println("║    Receiver   : " + BOLD_WHITE + String.format("%-46s", receiver.getName()) +  RESET + "║");
-        System.out.println("║    Amount     : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", amount)) +  RESET + "║");
+        System.out.println("║    Amount     : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", effectiveAmount)) +  RESET + "║");
         System.out.println("║    Fee        : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", fee)) +  RESET + "║");
         System.out.println("║    Total Debit: Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", totalDebit)) +  RESET + "║");
-        System.out.println("║    Cashback   : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", sender.calculateCashback(amount))) +  RESET + "║");
+        System.out.println("║    Cashback   : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", totalCashback)) +  RESET + "║");
+        if (promo != null) {
+            System.out.println("║    Promo      : " + BOLD_WHITE + String.format("%-46s", promo.getPromoCode()) +  RESET + "║");
+        }
         System.out.println("║    Status     : " + BOLD_WHITE + String.format("%-46s", status) +  RESET + "║");
         System.out.println("╚═══════════════════════════════════════════════════════════════╝");
     }

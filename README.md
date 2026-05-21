@@ -139,11 +139,39 @@ Subclass yang lupa mengimplementasikan method abstract akan **gagal compile** (e
 
 ### Target Fitur
 
-- Sistem promo (`abstract class Promo` -> `Cashback`, `Discount`)
+- Sistem promo (`abstract class Promo` -> `CashbackPromo`, `DiscountPromo`)
 - Fitur split bill
-- PIN/password keamanan
-- Laporan keuangan bulanan
-- Save/load data user ke file
+- PIN/password keamanan (default `1234`, verifikasi saat login & transaksi sensitif)
+- Laporan keuangan bulanan (`showMonthlyFinancialReport()`)
+- Save/load data user ke file `data/users_data.txt`
+
+### Menu M6
+
+| No | Fitur |
+| -- | ----- |
+| 1 | Login + PIN |
+| 2 | Lihat Saldo |
+| 3 | Top Up (PIN) |
+| 4 | Bayar / Transfer + Promo |
+| 5 | Riwayat Transaksi |
+| 6 | Split Bill |
+| 7 | Laporan Keuangan Bulanan |
+| 8 | Simpan Data |
+| 9 | Muat Data |
+| 10 | Logout |
+| 0 | Exit |
+
+### Struktur Class Tambahan (M6)
+
+```
+com.payment.models.promo
+├── Promo (abstract)
+├── CashbackPromo
+└── DiscountPromo
+
+com.payment.services
+└── UserDataStorage
+```
 
 ### Kriteria Penilaian (Total 15)
 

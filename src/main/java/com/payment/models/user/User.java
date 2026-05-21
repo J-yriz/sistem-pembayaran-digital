@@ -2,6 +2,7 @@ package com.payment.models.user;
 
 import com.payment.models.Transaction;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,13 +22,19 @@ public abstract class User {
     private String name;
     private String phone;
     private double balance;
+    private String pin;
     private final List<Transaction> transactionHistory;
 
     public User(String userId, String name, String phone, double balance) {
+        this(userId, name, phone, balance, "1234");
+    }
+
+    public User(String userId, String name, String phone, double balance, String pin) {
         this.transactionHistory = new ArrayList<>();
         setUserId(userId);
         setName(name);
         setPhone(phone);
+        setPin(pin);
         setBalance(balance);
     }
 
@@ -49,6 +56,20 @@ public abstract class User {
 
     public List<Transaction> getTransactionHistory() {
         return Collections.unmodifiableList(transactionHistory);
+    }
+
+    public boolean verifyPin(String inputPin) {
+        return pin != null && pin.equals(inputPin);
+    }
+
+    public String getPinForStorage() {
+        return pin;
+    }
+
+    public abstract String getUserTypeKey();
+
+    public void restoreState(List<Transaction> transactions) {
+        replaceTransactionHistory(transactions);
     }
 
     private void setUserId(String userId) {
@@ -73,6 +94,18 @@ public abstract class User {
             return;
         }
         this.phone = phone;
+    }
+
+    private void setPin(String pin) {
+        if (pin == null || pin.length() < 4 || pin.length() > 6) {
+            System.out.println("Gagal: PIN harus 4-6 digit.");
+            return;
+        }
+        if (!pin.matches("\\d+")) {
+            System.out.println("Gagal: PIN hanya boleh angka.");
+            return;
+        }
+        this.pin = pin;
     }
 
     private void setBalance(double balance) {
@@ -183,6 +216,41 @@ public abstract class User {
 
     public void showBalance() {
         System.out.printf("║ User: %-20s Saldo: Rp %,24.0f ║%n", name, balance);
+    }
+
+    public void showMonthlyFinancialReport() {
+        YearMonth currentMonth = YearMonth.now();
+        double totalExpense = 0;
+        double totalIncome = 0;
+        int expenseCount = 0;
+        int incomeCount = 0;
+
+        for (Transaction tx : transactionHistory) {
+            if (!YearMonth.from(tx.getTimestamp()).equals(currentMonth)) {
+                continue;
+            }
+            if (tx.isSuccessfulExpense()) {
+                totalExpense += tx.getAmount();
+                expenseCount++;
+            } else if (tx.isSuccessfulIncome()) {
+                totalIncome += tx.getAmount();
+                incomeCount++;
+            }
+        }
+
+        System.out.println("\n╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");
+        System.out.println(BOLD_WHITE + "║ * LAPORAN KEUANGAN BULANAN                                    ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Periode: " + String.format("%-48s", currentMonth) + " ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Pemilik: " + String.format("%-48s", name) + " ║" + RESET);
+        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
+        System.out.printf("║ Total Pengeluaran : Rp %,38.0f ║%n", totalExpense);
+        System.out.printf("║ Jumlah Transaksi Keluar : %-37d ║%n", expenseCount);
+        System.out.printf("║ Total Pemasukan   : Rp %,38.0f ║%n", totalIncome);
+        System.out.printf("║ Jumlah Transaksi Masuk  : %-37d ║%n", incomeCount);
+        System.out.printf("║ Saldo Saat Ini    : Rp %,38.0f ║%n", balance);
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+        System.out.println();
     }
 
     public void showTransactionHistory() {

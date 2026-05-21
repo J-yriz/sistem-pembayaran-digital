@@ -57,6 +57,7 @@ gradlew.bat
 .settings/
 bin/
 out/
+data/users_data.txt
 .env
 .env.local
 rules-ai.json

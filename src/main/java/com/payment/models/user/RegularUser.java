@@ -9,6 +9,15 @@ public class RegularUser extends User {
         super(userId, name, phone, balance);
     }
 
+    public RegularUser(String userId, String name, String phone, double balance, String pin) {
+        super(userId, name, phone, balance, pin);
+    }
+
+    @Override
+    public String getUserTypeKey() {
+        return "REGULAR";
+    }
+
     @Override
     public String getAccountType() {
         return "Regular User";
