@@ -1,4 +1,6 @@
-package com.payment.models;
+package com.payment.models.payment;
+
+import com.payment.models.user.User;
 
 /**
  * QRPayment adalah turunan Payment untuk simulasi pembayaran menggunakan QR.

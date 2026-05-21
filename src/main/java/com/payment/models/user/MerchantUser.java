@@ -1,4 +1,4 @@
-package com.payment.models;
+package com.payment.models.user;
 
 
 public class MerchantUser extends User {

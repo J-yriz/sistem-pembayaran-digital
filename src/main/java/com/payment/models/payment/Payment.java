@@ -1,4 +1,7 @@
-package com.payment.models;
+package com.payment.models.payment;
+
+import com.payment.models.user.MerchantUser;
+import com.payment.models.user.User;
 
 public class Payment {
 

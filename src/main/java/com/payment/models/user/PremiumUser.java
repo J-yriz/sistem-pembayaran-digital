@@ -1,4 +1,4 @@
-package com.payment.models;
+package com.payment.models.user;
 
 /**
  * PremiumUser memiliki limit transaksi dan cashback lebih tinggi dari akun reguler.

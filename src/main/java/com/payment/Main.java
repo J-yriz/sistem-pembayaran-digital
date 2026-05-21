@@ -1,13 +1,13 @@
 package com.payment;
 
-import com.payment.models.BankTransfer;
-import com.payment.models.MerchantUser;
-import com.payment.models.Payment;
-import com.payment.models.PremiumUser;
-import com.payment.models.QRPayment;
-import com.payment.models.RegularUser;
-import com.payment.models.User;
-import com.payment.models.WalletTransfer;
+import com.payment.models.payment.BankTransfer;
+import com.payment.models.payment.Payment;
+import com.payment.models.payment.QRPayment;
+import com.payment.models.payment.WalletTransfer;
+import com.payment.models.user.MerchantUser;
+import com.payment.models.user.PremiumUser;
+import com.payment.models.user.RegularUser;
+import com.payment.models.user.User;
 import com.payment.utils.DisplayUtils;
 import java.util.Scanner;
 

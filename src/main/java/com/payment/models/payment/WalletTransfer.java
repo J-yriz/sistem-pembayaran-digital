@@ -1,4 +1,6 @@
-package com.payment.models;
+package com.payment.models.payment;
+
+import com.payment.models.user.User;
 
 /**
  * WalletTransfer adalah turunan Payment untuk transfer antar user di aplikasi.

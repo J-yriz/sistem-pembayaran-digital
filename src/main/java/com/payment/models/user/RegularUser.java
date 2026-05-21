@@ -1,4 +1,4 @@
-package com.payment.models;
+package com.payment.models.user;
 
 /**
  * RegularUser merepresentasikan akun standar dengan limit dan cashback dasar.

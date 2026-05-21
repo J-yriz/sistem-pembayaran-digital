@@ -1,4 +1,6 @@
-package com.payment.models;
+package com.payment.models.user;
+
+import com.payment.models.Transaction;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,7 +137,7 @@ public class User {
         }
     }
 
-    void receiveTransfer(double amount) {
+    public void receiveTransfer(double amount) {
         if (amount <= 0) {
             return;
         }
@@ -144,7 +146,7 @@ public class User {
         addTransaction(amount, "RECEIVE", "SUCCESS");
     }
 
-    void receiveCashback(double amount) {
+    public void receiveCashback(double amount) {
         if (amount <= 0) {
             return;
         }
