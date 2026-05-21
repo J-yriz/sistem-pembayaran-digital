@@ -1,11 +1,8 @@
 package com.payment.models.user;
 
-/**
- * RegularUser merepresentasikan akun standar dengan limit dan cashback dasar.
- */
 public class RegularUser extends User {
 
-    private static final double TRANSACTION_LIMIT = 2_000_000;
+    private static final double BALANCE_LIMIT = 2_000_000;
     private static final double CASHBACK_RATE = 0.01;
 
     public RegularUser(String userId, String name, String phone, double balance) {
@@ -18,8 +15,8 @@ public class RegularUser extends User {
     }
 
     @Override
-    public double getTransactionLimit() {
-        return TRANSACTION_LIMIT;
+    public double getBalanceLimit() {
+        return BALANCE_LIMIT;
     }
 
     @Override

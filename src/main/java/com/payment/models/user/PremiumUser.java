@@ -1,11 +1,8 @@
 package com.payment.models.user;
 
-/**
- * PremiumUser memiliki limit transaksi dan cashback lebih tinggi dari akun reguler.
- */
 public class PremiumUser extends User {
 
-    private static final double TRANSACTION_LIMIT = 10_000_000;
+    private static final double BALANCE_LIMIT = 10_000_000;
     private static final double CASHBACK_RATE = 0.05;
 
     public PremiumUser(String userId, String name, String phone, double balance) {
@@ -18,8 +15,8 @@ public class PremiumUser extends User {
     }
 
     @Override
-    public double getTransactionLimit() {
-        return TRANSACTION_LIMIT;
+    public double getBalanceLimit() {
+        return BALANCE_LIMIT;
     }
 
     @Override

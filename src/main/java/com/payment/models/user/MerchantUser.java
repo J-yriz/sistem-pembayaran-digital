@@ -1,9 +1,8 @@
 package com.payment.models.user;
 
-
 public class MerchantUser extends User {
 
-    private static final double TRANSACTION_LIMIT = 50_000_000;
+    private static final double BALANCE_LIMIT = 50_000_000;
     private static final double CASHBACK_RATE = 0.0;
 
     public MerchantUser(String userId, String name, String phone, double balance) {
@@ -16,8 +15,8 @@ public class MerchantUser extends User {
     }
 
     @Override
-    public double getTransactionLimit() {
-        return TRANSACTION_LIMIT;
+    public double getBalanceLimit() {
+        return BALANCE_LIMIT;
     }
 
     @Override
@@ -25,9 +24,6 @@ public class MerchantUser extends User {
         return CASHBACK_RATE;
     }
 
-    /**
-     * Method khusus merchant untuk menerima pembayaran.
-     */
     public void receivePayment(double amount) {
         receiveTransfer(amount);
     }

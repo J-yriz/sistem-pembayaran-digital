@@ -15,12 +15,12 @@ javac -d bin -sourcepath src/main/java $(find src/main/java -name "*.java")
 
 # Cek apakah compile berhasil (exit code 0)
 if [ $? -eq 0 ]; then
-    echo "✅ Compile Berhasil!"
+    echo "Compile berhasil."
     echo ""
     
     # 3. Jalankan program dengan classpath (-cp) ke folder bin
     java -Dfile.encoding=UTF-8 -cp bin com.payment.Main
 else
-    echo "❌ Compile Gagal! Silakan cek error di atas."
+    echo "Compile gagal. Silakan cek error di atas."
     exit 1
 fi

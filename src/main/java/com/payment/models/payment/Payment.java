@@ -50,22 +50,30 @@ public class Payment {
     public final void execute() {
         if (!validate()) {
             setStatus("FAILED");
-            System.out.println("✗ Data transaksi tidak valid.");
+            System.out.println("Gagal: Data transaksi tidak valid.");
             return;
         }
 
         double fee = calculateFee();
         double totalDebit = amount + fee;
+        double cashback = sender.calculateCashback(amount);
 
-        if (amount > sender.getTransactionLimit()) {
+        if (!receiver.canHoldAdditional(amount)) {
             setStatus("FAILED");
-            System.out.println("✗ Nominal melebihi limit transaksi akun " + sender.getAccountType() + ".");
+            System.out.println("Gagal: Saldo penerima melebihi batas kapasitas dompet.");
             return;
         }
 
         if (!sender.hasSufficientBalance(totalDebit)) {
             setStatus("FAILED");
             sender.pay(totalDebit);
+            return;
+        }
+
+        double balanceAfterPayment = sender.getBalance() - totalDebit;
+        if (cashback > 0 && balanceAfterPayment + cashback > sender.getBalanceLimit()) {
+            setStatus("FAILED");
+            System.out.println("Gagal: Cashback melebihi batas kapasitas dompet pengirim.");
             return;
         }
 
@@ -77,7 +85,6 @@ public class Payment {
             receiver.receiveTransfer(amount);
         }
 
-        double cashback = sender.calculateCashback(amount);
         if (cashback > 0) {
             sender.receiveCashback(cashback);
         }
