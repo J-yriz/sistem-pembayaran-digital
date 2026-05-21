@@ -164,7 +164,7 @@ public class Main {
             String name = users[i].getName();
             String id = users[i].getUserId();
             String type = users[i].getAccountType();
-            double capacity = users[i].getBalanceLimit();
+            double capacity = users[i].getTransactionLimit();
             double cbRate = users[i].getCashbackRate() * 100;
 
             String leftText1 = (i + 1) + ". " + name;

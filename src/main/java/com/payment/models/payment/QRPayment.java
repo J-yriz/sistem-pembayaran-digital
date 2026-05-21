@@ -17,7 +17,7 @@ public class QRPayment extends Payment {
 
     @Override
     public boolean validate() {
-        return super.validate()
+        return validateCommonFields()
             && qrCode != null
             && qrCode.startsWith("QR-")
             && qrCode.length() >= 6;

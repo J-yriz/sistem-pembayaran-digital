@@ -15,7 +15,7 @@ public class PremiumUser extends User {
     }
 
     @Override
-    public double getBalanceLimit() {
+    public double getTransactionLimit() {
         return BALANCE_LIMIT;
     }
 

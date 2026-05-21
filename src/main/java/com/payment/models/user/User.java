@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class User {
+/**
+ * Abstract class User — tidak dapat di-instantiate langsung karena setiap akun
+ * memiliki tipe, batas transaksi, dan cashback yang berbeda. Subclass wajib
+ * mengimplementasikan {@link #getTransactionLimit()}, {@link #getCashbackRate()},
+ * dan {@link #getAccountType()}.
+ */
+public abstract class User {
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
     private static final String BOLD_WHITE        = "\u001B[1;38;5;15m";
     private static final String RESET             = "\u001B[0m";
@@ -74,9 +80,9 @@ public class User {
             System.out.println("Gagal: Saldo tidak boleh negatif.");
             return;
         }
-        if (balance > getBalanceLimit()) {
+        if (balance > getTransactionLimit()) {
             System.out.println("Gagal: Saldo melebihi batas kapasitas dompet.");
-            this.balance = getBalanceLimit();
+            this.balance = getTransactionLimit();
             return;
         }
         this.balance = balance;
@@ -90,14 +96,14 @@ public class User {
     }
 
     public boolean canHoldAdditional(double amount) {
-        return balance + amount <= getBalanceLimit();
+        return balance + amount <= getTransactionLimit();
     }
 
     public void topUp(double amount) {
         if (amount > 0) {
             if (!canHoldAdditional(amount)) {
                 System.out.println(
-                    "Gagal: Top up melebihi batas kapasitas dompet (maks. Rp" + (long) getBalanceLimit() + ")."
+                    "Gagal: Top up melebihi batas kapasitas dompet (maks. Rp" + (long) getTransactionLimit() + ")."
                 );
                 addTransaction(amount, "TOP_UP", "FAILED");
                 return;
@@ -162,17 +168,11 @@ public class User {
         return balance >= amount;
     }
 
-    public String getAccountType() {
-        return "User";
-    }
+    public abstract String getAccountType();
 
-    public double getBalanceLimit() {
-        return Double.MAX_VALUE;
-    }
+    public abstract double getTransactionLimit();
 
-    public double getCashbackRate() {
-        return 0.0;
-    }
+    public abstract double getCashbackRate();
 
     public double calculateCashback(double transactionAmount) {
         if (transactionAmount <= 0) {

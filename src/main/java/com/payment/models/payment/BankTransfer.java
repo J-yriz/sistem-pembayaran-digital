@@ -31,7 +31,7 @@ public class BankTransfer extends Payment {
 
     @Override
     public boolean validate() {
-        return super.validate()
+        return validateCommonFields()
             && bankName != null
             && !bankName.isBlank()
             && destinationAccountNumber != null

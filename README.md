@@ -96,6 +96,15 @@ Dokumen ini merangkum **timeline milestone resmi M1 sampai M6** sesuai spesifika
 
 ## Milestone 5 - Refactor ke Abstract Class
 
+### Dokumentasi Abstract Class (di kode)
+
+| Class | Alasan dijadikan abstract |
+| ----- | ------------------------- |
+| `User` | Tidak ada akun "generik" yang valid; setiap user pasti Regular, Premium, atau Merchant dengan limit & cashback berbeda. |
+| `Payment` | Tidak ada metode bayar generik; setiap transaksi wajib lewat Bank Transfer, QR, atau Wallet dengan fee & validasi sendiri. |
+
+Subclass yang lupa mengimplementasikan method abstract akan **gagal compile** (error compiler Java), sehingga bug tertangkap sebelum runtime.
+
 ### Target Fitur
 
 - Ubah `User` menjadi `abstract class User`

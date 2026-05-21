@@ -3,7 +3,13 @@ package com.payment.models.payment;
 import com.payment.models.user.MerchantUser;
 import com.payment.models.user.User;
 
-public class Payment {
+/**
+ * Abstract class Payment — tidak dapat di-instantiate langsung karena setiap
+ * metode pembayaran memiliki perhitungan biaya dan validasi berbeda. Subclass
+ * wajib mengimplementasikan {@link #calculateFee()}, {@link #validate()}, dan
+ * {@link #getPaymentMethod()}.
+ */
+public abstract class Payment {
 
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
     private static final String BOLD_WHITE        = "\u001B[1;38;5;15m";
@@ -71,7 +77,7 @@ public class Payment {
         }
 
         double balanceAfterPayment = sender.getBalance() - totalDebit;
-        if (cashback > 0 && balanceAfterPayment + cashback > sender.getBalanceLimit()) {
+        if (cashback > 0 && balanceAfterPayment + cashback > sender.getTransactionLimit()) {
             setStatus("FAILED");
             System.out.println("Gagal: Cashback melebihi batas kapasitas dompet pengirim.");
             return;
@@ -93,7 +99,7 @@ public class Payment {
         printReceipt();
     }
 
-    public boolean validate() {
+    protected boolean validateCommonFields() {
         return paymentId != null
             && !paymentId.isBlank()
             && amount > 0
@@ -102,13 +108,11 @@ public class Payment {
             && sender != receiver;
     }
 
-    public double calculateFee() {
-        return 0.0;
-    }
+    public abstract boolean validate();
 
-    public String getPaymentMethod() {
-        return "Generic Payment";
-    }
+    public abstract double calculateFee();
+
+    public abstract String getPaymentMethod();
 
     public void printReceipt() {
         double fee = calculateFee();

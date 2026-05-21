@@ -17,7 +17,7 @@ public class WalletTransfer extends Payment {
 
     @Override
     public boolean validate() {
-        return super.validate()
+        return validateCommonFields()
             && destinationPhone != null
             && destinationPhone.startsWith("08")
             && destinationPhone.length() >= 10;
