@@ -3,7 +3,6 @@ package com.payment.models;
 public class Payment {
 
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
-    private static final String ITALIC_DARK_GRAY  = "\u001B[3;38;5;59m";
     private static final String BOLD_WHITE        = "\u001B[1;38;5;15m";
     private static final String RESET             = "\u001B[0m";
 
