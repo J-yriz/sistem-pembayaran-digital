@@ -16,7 +16,8 @@ public class DiscountPromo extends Promo {
 
     @Override
     public boolean isApplicable(double amount) {
-    }        return amount >= 25_000;
+          return amount >= 25_000;
+    }  
 
 
     @Override

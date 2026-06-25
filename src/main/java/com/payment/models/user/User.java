@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Abstract class User — tidak dapat di-instantiate langsung karena setiap akun
- * memiliki tipe, batas transaksi, dan cashback yang berbeda. Subclass wajib
- * mengimplementasikan {@link #getTransactionLimit()}, {@link #getCashbackRate()},
- * dan {@link #getAccountType()}.
- */
 public abstract class User {
     private static final String ITALIC_LIGHT_GRAY = "\u001B[3;38;5;250m";
     private static final String BOLD_WHITE        = "\u001B[1;38;5;15m";
