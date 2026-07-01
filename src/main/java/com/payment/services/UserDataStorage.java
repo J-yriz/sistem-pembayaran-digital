@@ -19,8 +19,28 @@ import java.util.Map;
 public class UserDataStorage {
 
     private static final Path DATA_FILE = Path.of("data", "users_data.txt");
+    private static boolean autoSaveEnabled = true;
 
     private UserDataStorage() {
+    }
+
+    public static void setAutoSave(boolean enabled) {
+        autoSaveEnabled = enabled;
+    }
+
+    public static boolean isAutoSaveEnabled() {
+        return autoSaveEnabled;
+    }
+
+    public static void autoSave(User[] users) {
+        if (!autoSaveEnabled) {
+            return;
+        }
+        try {
+            save(users);
+        } catch (IOException e) {
+            System.out.println("Warning: Auto-save gagal (" + e.getMessage() + ").");
+        }
     }
 
     public static void save(User[] users) throws IOException {

@@ -275,7 +275,7 @@ public abstract class User {
         System.out.println();
     }
 
-    protected void addTransaction(double amount, String type, String status) {
+    public void addTransaction(double amount, String type, String status) {
         transactionHistory.add(new Transaction(amount, type, status));
     }
 

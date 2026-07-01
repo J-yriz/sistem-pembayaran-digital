@@ -37,21 +37,22 @@ public class Main {
 
             switch (choice) {
                 case 1 -> handleLogin();
-                case 2 -> requireLogin(() -> showBalance());
-                case 3 -> requireLogin(() -> performTopUp());
-                case 4 -> requireLogin(() -> performPayment());
-                case 5 -> requireLogin(() -> {
+                case 2 -> handleRegister();
+                case 3 -> requireLogin(() -> showBalance());
+                case 4 -> requireLogin(() -> performTopUp());
+                case 5 -> requireLogin(() -> performPayment());
+                case 6 -> requireLogin(() -> {
                     currentUser.showTransactionHistory();
                     System.out.println("─────────────────────────────────────────────────────────────────");
                 });
-                case 6 -> requireLogin(() -> performSplitBill());
-                case 7 -> requireLogin(() -> {
+                case 7 -> requireLogin(() -> performSplitBill());
+                case 8 -> requireLogin(() -> {
                     currentUser.showMonthlyFinancialReport();
                     System.out.println("─────────────────────────────────────────────────────────────────");
                 });
-                case 8 -> saveUserData();
-                case 9 -> loadUserData();
-                case 10 -> handleLogout();
+                case 9 -> saveUserData();
+                case 10 -> loadUserData();
+                case 11 -> handleLogout();
                 case 0 -> {
                     isRunning = false;
                     System.out.println("Terima kasih telah menggunakan 67 Cents. Sampai jumpa!");
@@ -103,18 +104,18 @@ public class Main {
     private static int displayMainMenu() {
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
-        System.out.println(BOLD_WHITE + "║ * MENU UTAMA (M6)                                             ║" + RESET);
-        System.out.println(ITALIC_LIGHT_GRAY + "║   PIN default: 1234 | Promo, Split Bill, Save/Load            ║" + RESET);
+        System.out.println(BOLD_WHITE + "║ * MENU UTAMA (M6+)                                            ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Register, Auto-Save, Split Bill Plus, Diskon & Pajak        ║" + RESET);
         System.out.println("╠══════════════════════════════╦════════════════════════════════╣");
-        System.out.printf("║ %-28s ║ %-30s ║%n", "1. Login", "6. Split Bill");
-        System.out.printf("║ %-28s ║ %-30s ║%n", "2. Lihat Saldo", "7. Laporan Bulanan");
-        System.out.printf("║ %-28s ║ %-30s ║%n", "3. Top Up", "8. Simpan Data");
-        System.out.printf("║ %-28s ║ %-30s ║%n", "4. Bayar / Transfer", "9. Muat Data");
-        System.out.printf("║ %-28s ║ %-30s ║%n", "5. Riwayat Transaksi", "10. Logout");
-        System.out.printf("║ %-28s ║ %-30s ║%n", "0. Exit", "");
+        System.out.printf("║ %-28s ║ %-30s ║%n", "1. Login", "6. Riwayat Transaksi");
+        System.out.printf("║ %-28s ║ %-30s ║%n", "2. Register", "7. Split Bill");
+        System.out.printf("║ %-28s ║ %-30s ║%n", "3. Lihat Saldo", "8. Laporan Bulanan");
+        System.out.printf("║ %-28s ║ %-30s ║%n", "4. Top Up", "9. Simpan Data");
+        System.out.printf("║ %-28s ║ %-30s ║%n", "5. Bayar / Transfer", "10. Muat Data");
+        System.out.printf("║ %-28s ║ %-30s ║%n", "0. Exit", "11. Logout");
         System.out.println("╚══════════════════════════════╩════════════════════════════════╝");
         System.out.print("\n \n");
-        return readIntInRange("\u21A3 Pilih menu: ", 0, 10);
+        return readIntInRange("\u21A3 Pilih menu: ", 0, 11);
     }
 
     private static void handleLogin() {
@@ -134,6 +135,68 @@ public class Main {
             System.out.println("Info: Anda belum login.");
             System.out.println("─────────────────────────────────────────────────────────────────");
         }
+    }
+
+    private static void handleRegister() {
+        if (currentUser != null) {
+            System.out.println("Info: Anda harus logout terlebih dahulu untuk register akun baru.");
+            System.out.println("─────────────────────────────────────────────────────────────────");
+            return;
+        }
+
+        System.out.println("╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");
+        System.out.println(BOLD_WHITE + "║ * REGISTER AKUN BARU                                         ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Buat akun baru untuk menggunakan sistem                    ║" + RESET);
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+
+        System.out.println(BOLD_WHITE + "\u21B3 Pilih jenis akun:" + RESET);
+        System.out.println("  1. Regular User (limit Rp2.000.000, cashback 1%)");
+        System.out.println("  2. Premium User (limit Rp10.000.000, cashback 5%)");
+        System.out.println("  3. Merchant User (limit Rp50.000.000, cashback 0%)");
+
+        int userTypeChoice = readIntInRange(BOLD_WHITE + "\u21B3 Pilih jenis akun: " + RESET, 1, 3);
+
+        scanner.nextLine();
+
+        String userId = "U" + System.currentTimeMillis();
+
+        System.out.print(BOLD_WHITE + "\u21B3 Nama lengkap: " + RESET);
+        String name = scanner.nextLine();
+
+        System.out.print(BOLD_WHITE + "\u21B3 Nomor telepon: " + RESET);
+        String phone = scanner.nextLine();
+
+        double initialBalance = readPositiveAmount(BOLD_WHITE + "\u21B3 Saldo awal: Rp " + RESET);
+
+        String pin;
+        while (true) {
+            System.out.print(BOLD_WHITE + "\u21B3 PIN (4-6 digit): " + RESET);
+            pin = scanner.next();
+            if (pin.length() >= 4 && pin.length() <= 6 && pin.matches("\\d+")) {
+                break;
+            }
+            System.out.println("Gagal: PIN harus 4-6 digit angka.");
+        }
+
+        User newUser = switch (userTypeChoice) {
+            case 1 -> new RegularUser(userId, name, phone, initialBalance, pin);
+            case 2 -> new PremiumUser(userId, name, phone, initialBalance, pin);
+            case 3 -> new MerchantUser(userId, name, phone, initialBalance, pin);
+            default -> null;
+        };
+
+        if (newUser != null) {
+            User[] newUsers = new User[users.length + 1];
+            System.arraycopy(users, 0, newUsers, 0, users.length);
+            newUsers[users.length] = newUser;
+            users = newUsers;
+
+            autoSaveUsers();
+            System.out.println("Berhasil: Akun " + BOLD_WHITE + name + RESET + " berhasil didaftarkan!");
+            System.out.println("Info: Silakan login dengan memilih akun Anda.");
+        }
+        System.out.println("─────────────────────────────────────────────────────────────────");
     }
 
     private static void requireLogin(Runnable action) {
@@ -249,6 +312,7 @@ public class Main {
         System.out.println("╚═══════════════════════════════════════════════════════════════╝");
         double amount = readPositiveAmount("Masukkan nominal top-up: Rp ");
         currentUser.topUp(amount);
+        autoSaveUsers();
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
         currentUser.showBalance();
@@ -291,7 +355,18 @@ public class Main {
             payment.setPromo(promo);
         }
 
+        double discountPercent = chooseDiscount();
+        if (discountPercent > 0) {
+            payment.setDiscountPercent(discountPercent);
+        }
+
+        double taxPercent = chooseTax();
+        if (taxPercent > 0) {
+            payment.setTaxPercent(taxPercent);
+        }
+
         processPayment(payment);
+        autoSaveUsers();
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
         currentUser.showBalance();
@@ -315,6 +390,27 @@ public class Main {
         };
     }
 
+    private static double chooseDiscount() {
+        System.out.println(BOLD_WHITE + "\u21B3 Tambahkan diskon?" + RESET);
+        System.out.println("  0. Tidak ada");
+        System.out.println("  5. 5%");
+        System.out.println("  10. 10%");
+        System.out.println("  15. 15%");
+
+        int choice = readIntInRange(BOLD_WHITE + "\u21B3 Pilih diskon: " + RESET, 0, 15);
+        return (choice == 5 || choice == 10 || choice == 15) ? choice : 0;
+    }
+
+    private static double chooseTax() {
+        System.out.println(BOLD_WHITE + "\u21B3 Tambahkan pajak?" + RESET);
+        System.out.println("  0. Tidak ada");
+        System.out.println("  10. PPN 10%");
+        System.out.println("  11. PPN 11%");
+
+        int choice = readIntInRange(BOLD_WHITE + "\u21B3 Pilih pajak: " + RESET, 0, 11);
+        return (choice == 10 || choice == 11) ? choice : 0;
+    }
+
     private static void performSplitBill() {
         if (!verifyCurrentUserPin()) {
             System.out.println("Gagal: Split bill dibatalkan.");
@@ -325,57 +421,122 @@ public class Main {
         System.out.println("╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
         System.out.println(BOLD_WHITE + "║ * SPLIT BILL                                                  ║" + RESET);
-        System.out.println(ITALIC_LIGHT_GRAY + "║   Bagi tagihan dengan peserta lain                            ║" + RESET);
+        System.out.println(ITALIC_LIGHT_GRAY + "║   Masing-masing peserta input biaya sendiri                    ║" + RESET);
         System.out.println("╚═══════════════════════════════════════════════════════════════╝");
 
-        double totalBill = readPositiveAmount(BOLD_WHITE + "\u21B3 Total tagihan: Rp " + RESET);
         int participants = readIntInRange(BOLD_WHITE + "\u21B3 Jumlah peserta (termasuk Anda): " + RESET, 2, users.length);
 
-        double sharePerPerson = totalBill / participants;
-        System.out.printf("Info: Bagian per orang = Rp %,.0f%n", sharePerPerson);
+        System.out.println(BOLD_WHITE + "\u21B3 Pilih " + participants + " peserta:" + RESET);
+        User[] selectedParticipants = new User[participants];
+        selectedParticipants[0] = currentUser;
+        System.out.println("  1. " + currentUser.getName() + " (Anda) - " + currentUser.getAccountType());
 
-        if (!currentUser.hasSufficientBalance(sharePerPerson)) {
-            System.out.println("Gagal: Saldo Anda tidak cukup untuk bagian Anda.");
-            System.out.println("─────────────────────────────────────────────────────────────────");
-            return;
-        }
-
-        currentUser.pay(sharePerPerson);
-        System.out.println("Berhasil: Anda membayar bagian Rp" + (long) sharePerPerson + ".");
-
-        int othersToCollect = participants - 1;
-        if (othersToCollect <= 0) {
-            System.out.println("─────────────────────────────────────────────────────────────────");
-            return;
-        }
-
-        System.out.println(BOLD_WHITE + "\u21B3 Pilih " + othersToCollect + " peserta untuk menagih bagian mereka:" + RESET);
-
-        User[] selectedOthers = new User[othersToCollect];
-        for (int i = 0; i < othersToCollect; i++) {
-            User payer = chooseSplitBillPayer(selectedOthers, i + 1);
+        for (int i = 1; i < participants; i++) {
+            User payer = chooseSplitBillParticipant(selectedParticipants, i + 1);
             if (payer == null) {
                 System.out.println("Gagal: Pemilihan peserta dibatalkan.");
                 System.out.println("─────────────────────────────────────────────────────────────────");
                 return;
             }
-            selectedOthers[i] = payer;
+            selectedParticipants[i] = payer;
+        }
 
-            if (!payer.hasSufficientBalance(sharePerPerson)) {
-                System.out.println("Gagal: Saldo " + payer.getName() + " tidak cukup.");
-                payer.pay(sharePerPerson);
+        double totalIndividualCost = 0;
+        double[] individualCosts = new double[participants];
+
+        System.out.println("\n" + BOLD_WHITE + "=== INPUT BIAYA MASING-MASING ===" + RESET);
+        for (int i = 0; i < participants; i++) {
+            individualCosts[i] = readPositiveAmount(
+                BOLD_WHITE + "\u21B3 Biaya untuk " + selectedParticipants[i].getName() + ": Rp " + RESET
+            );
+            totalIndividualCost += individualCosts[i];
+        }
+
+        double discountPercent = 0;
+        System.out.println(BOLD_WHITE + "\u21B3 Tambahkan diskon? (%)" + RESET);
+        System.out.println("  0. Tidak ada");
+        System.out.println("  5. 5%");
+        System.out.println("  10. 10%");
+        System.out.println("  15. 15%");
+        int discountChoice = readIntInRange(BOLD_WHITE + "\u21B3 Pilih diskon: " + RESET, 0, 15);
+        if (discountChoice == 5 || discountChoice == 10 || discountChoice == 15) {
+            discountPercent = discountChoice;
+        }
+
+        double taxPercent = 0;
+        System.out.println(BOLD_WHITE + "\u21B3 Tambahkan pajak? (%)" + RESET);
+        System.out.println("  0. Tidak ada");
+        System.out.println("  10. PPN 10%");
+        System.out.println("  11. PPN 11%");
+        int taxChoice = readIntInRange(BOLD_WHITE + "\u21B3 Pilih pajak: " + RESET, 0, 11);
+        if (taxChoice == 10 || taxChoice == 11) {
+            taxPercent = taxChoice;
+        }
+
+        double subtotal = totalIndividualCost;
+        double discountAmount = subtotal * (discountPercent / 100);
+        double afterDiscount = subtotal - discountAmount;
+        double taxAmount = afterDiscount * (taxPercent / 100);
+        double grandTotal = afterDiscount + taxAmount;
+
+        System.out.println("\n" + "╔═══════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                                               ║");
+        System.out.println(BOLD_WHITE + "║ * RINGKASAN SPLIT BILL                                        ║" + RESET);
+        System.out.println("╠═══════════════════════════════════════════════════════════════╣");
+        for (int i = 0; i < participants; i++) {
+            System.out.printf("║   %-20s : Rp %,20.0f ║%n", selectedParticipants[i].getName(), individualCosts[i]);
+        }
+        System.out.printf("║   %-20s : Rp %,20.0f ║%n", "SUBTOTAL", subtotal);
+        System.out.printf("║   %-20s : Rp %,20.0f (%.0f%%)║%n", "DISKON", -discountAmount, discountPercent);
+        System.out.printf("║   %-20s : Rp %,20.0f (%.0f%%)║%n", "PAJAK", taxAmount, taxPercent);
+        System.out.printf("║   %-20s : Rp %,20.0f ║%n", "TOTAL", grandTotal);
+        System.out.println("╚═══════════════════════════════════════════════════════════════╝");
+
+        double myShare = individualCosts[0];
+        double myShareAfterDiscountTax = grandTotal * (myShare / subtotal);
+
+        if (!currentUser.hasSufficientBalance(myShareAfterDiscountTax)) {
+            System.out.println("Gagal: Saldo Anda tidak cukup (butuh Rp" + (long) myShareAfterDiscountTax + ").");
+            System.out.println("─────────────────────────────────────────────────────────────────");
+            return;
+        }
+
+        System.out.println(BOLD_WHITE + "\u21B3 Konfirmasi pembayaran?" + RESET);
+        System.out.println("  1. Ya, Bayar");
+        System.out.println("  2. Batal");
+        int confirm = readIntInRange(BOLD_WHITE + "\u21B3 Pilih: " + RESET, 1, 2);
+        if (confirm != 1) {
+            System.out.println("Info: Pembayaran dibatalkan.");
+            System.out.println("─────────────────────────────────────────────────────────────────");
+            return;
+        }
+
+        currentUser.pay(myShareAfterDiscountTax);
+        currentUser.addTransaction(myShareAfterDiscountTax, "SPLIT_BILL", "SUCCESS");
+
+        System.out.println("Info: Anda membayar bagian Rp" + (long) myShareAfterDiscountTax + ".");
+
+        for (int i = 1; i < participants; i++) {
+            User payer = selectedParticipants[i];
+            double payerShare = grandTotal * (individualCosts[i] / subtotal);
+
+            if (!payer.hasSufficientBalance(payerShare)) {
+                System.out.println("Gagal: Saldo " + payer.getName() + " tidak cukup. Tagihan gagal.");
+                payer.addTransaction(individualCosts[i], "SPLIT_BILL", "FAILED");
                 continue;
             }
 
-            payer.pay(sharePerPerson);
-            currentUser.receiveTransfer(sharePerPerson);
-            System.out.println("Berhasil: " + payer.getName() + " membayar bagian Rp" + (long) sharePerPerson + ".");
+            payer.pay(payerShare);
+            payer.addTransaction(individualCosts[i], "SPLIT_BILL", "SUCCESS");
+            currentUser.receiveTransfer(payerShare);
+            System.out.println("Berhasil: " + payer.getName() + " membayar bagian Rp" + (long) payerShare + ".");
         }
 
+        autoSaveUsers();
         System.out.println("─────────────────────────────────────────────────────────────────");
     }
 
-    private static User chooseSplitBillPayer(User[] alreadySelected, int round) {
+    private static User chooseSplitBillParticipant(User[] alreadySelected, int round) {
         System.out.println(BOLD_WHITE + "\u21B3 Peserta ke-" + round + ":" + RESET);
 
         int optionNumber = 1;
@@ -383,7 +544,7 @@ public class Main {
         int optionIndex = 0;
 
         for (User user : users) {
-            if (user == currentUser || isAlreadySelected(user, alreadySelected)) {
+            if (isAlreadySelected(user, alreadySelected)) {
                 continue;
             }
             options[optionIndex++] = user;
@@ -480,6 +641,10 @@ public class Main {
             System.out.println("Gagal: Tidak dapat menyimpan data (" + e.getMessage() + ").");
         }
         System.out.println("─────────────────────────────────────────────────────────────────");
+    }
+
+    private static void autoSaveUsers() {
+        UserDataStorage.autoSave(users);
     }
 
     private static void loadUserData() {

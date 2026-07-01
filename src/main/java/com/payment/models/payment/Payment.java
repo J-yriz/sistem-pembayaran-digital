@@ -23,6 +23,8 @@ public abstract class Payment {
     private User receiver;
     private String status;
     private Promo promo;
+    private double discountPercent;
+    private double taxPercent;
 
     public Payment(String paymentId, double amount, User sender, User receiver) {
         this.paymentId = paymentId;
@@ -64,6 +66,22 @@ public abstract class Payment {
         return promo;
     }
 
+    public double getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(double discountPercent) {
+        this.discountPercent = Math.max(0, Math.min(100, discountPercent));
+    }
+
+    public double getTaxPercent() {
+        return taxPercent;
+    }
+
+    public void setTaxPercent(double taxPercent) {
+        this.taxPercent = Math.max(0, Math.min(100, taxPercent));
+    }
+
     public final void execute() {
         if (!validate()) {
             setStatus("FAILED");
@@ -85,14 +103,27 @@ public abstract class Payment {
             System.out.println("Info: Promo " + promo.getPromoCode() + " (" + promo.getPromoType() + ") diterapkan.");
         }
 
-        double totalDebit = effectiveAmount + fee;
-        double cashback = sender.calculateCashback(effectiveAmount);
-
-        if (promo instanceof CashbackPromo cashbackPromo) {
-            cashback += cashbackPromo.calculateBonusCashback(effectiveAmount);
+        if (discountPercent > 0) {
+            double discountAmount = effectiveAmount * (discountPercent / 100);
+            effectiveAmount -= discountAmount;
+            System.out.println("Info: Diskon " + (int) discountPercent + "% diterapkan (-Rp" + (long) discountAmount + ").");
         }
 
-        if (!receiver.canHoldAdditional(effectiveAmount)) {
+        double taxAmount = 0;
+        if (taxPercent > 0) {
+            taxAmount = effectiveAmount * (taxPercent / 100);
+            effectiveAmount += taxAmount;
+            System.out.println("Info: Pajak " + (int) taxPercent + "% diterapkan (+Rp" + (long) taxAmount + ").");
+        }
+
+        double totalDebit = effectiveAmount + fee;
+        double cashback = sender.calculateCashback(amount);
+
+        if (promo instanceof CashbackPromo cashbackPromo) {
+            cashback += cashbackPromo.calculateBonusCashback(amount);
+        }
+
+        if (!receiver.canHoldAdditional(amount)) {
             setStatus("FAILED");
             System.out.println("Gagal: Saldo penerima melebihi batas kapasitas dompet.");
             return;
@@ -114,9 +145,9 @@ public abstract class Payment {
         sender.pay(totalDebit);
 
         if (receiver instanceof MerchantUser) {
-            ((MerchantUser) receiver).receivePayment(effectiveAmount);
+            ((MerchantUser) receiver).receivePayment(amount);
         } else {
-            receiver.receiveTransfer(effectiveAmount);
+            receiver.receiveTransfer(amount);
         }
 
         if (cashback > 0) {
@@ -155,8 +186,20 @@ public abstract class Payment {
             }
         }
 
+        double discountAmount = 0;
+        if (discountPercent > 0) {
+            discountAmount = effectiveAmount * (discountPercent / 100);
+            effectiveAmount -= discountAmount;
+        }
+
+        double taxAmount = 0;
+        if (taxPercent > 0) {
+            taxAmount = effectiveAmount * (taxPercent / 100);
+            effectiveAmount += taxAmount;
+        }
+
         double totalDebit = effectiveAmount + fee;
-        double totalCashback = sender.calculateCashback(effectiveAmount) + promoCashback;
+        double totalCashback = sender.calculateCashback(amount) + promoCashback;
 
         System.out.println("\n╔═══════════════════════════════════════════════════════════════╗");
         System.out.println("║                                                               ║");
@@ -167,7 +210,13 @@ public abstract class Payment {
         System.out.println("║    Method     : " + BOLD_WHITE + String.format("%-46s", getPaymentMethod()) +  RESET + "║");
         System.out.println("║    Sender     : " + BOLD_WHITE + String.format("%-46s", sender.getName()) +  RESET + "║");
         System.out.println("║    Receiver   : " + BOLD_WHITE + String.format("%-46s", receiver.getName()) +  RESET + "║");
-        System.out.println("║    Amount     : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", effectiveAmount)) +  RESET + "║");
+        System.out.println("║    Amount     : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", amount)) +  RESET + "║");
+        if (discountPercent > 0) {
+            System.out.println("║    Diskon     : -Rp" + BOLD_WHITE + String.format("%-43s", String.format("%,.0f (%.0f%%)", discountAmount, discountPercent)) +  RESET + "║");
+        }
+        if (taxPercent > 0) {
+            System.out.println("║    Pajak      : +Rp" + BOLD_WHITE + String.format("%-43s", String.format("%,.0f (%.0f%%)", taxAmount, taxPercent)) +  RESET + "║");
+        }
         System.out.println("║    Fee        : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", fee)) +  RESET + "║");
         System.out.println("║    Total Debit: Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", totalDebit)) +  RESET + "║");
         System.out.println("║    Cashback   : Rp" + BOLD_WHITE + String.format("%-44s", String.format("%,.0f", totalCashback)) +  RESET + "║");
